@@ -122,7 +122,7 @@ namespace MixPictureApp
             // 
             // BtnReset
             // 
-            this.BtnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.BtnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.BtnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnReset.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.BtnReset.Location = new System.Drawing.Point(27, 81);
