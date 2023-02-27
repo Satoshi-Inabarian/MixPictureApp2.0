@@ -35,19 +35,19 @@ namespace MixPictureApp
         private static extern bool AllocConsole();                 // この行を追加  
 
         private CancellationTokenSource cts = null; // キャンセルトークン
-        new System.Media.SoundPlayer play;
+
         /// <summary>
         /// /メンバ変数（インスタンス変数）※静的関数は使えないので注意！(staticなど・・・)
         //初期ディレクトリ
         private string curdir = Environment.CurrentDirectory;
         //定数(初期値)
-        private int TIMER_MAX = 5;//タイマー最大秒数
+        private int TIMER_CNT = 5;//タイマー初期値　バグ防止のため初期値は５秒にしている
         private int time_remain;//残り秒数表示の変数
-        private int HardSpanTime = 700;//難易度が高い時のカウントスパン（短くするほどカウントがはやくなる)
-        private int Pt;//取得したポイント
-        private int SPT = 0; //ポイント初期値
+        private double HARD_SPANTIME = 0.7;//難易度が高い時のカウントスパン（短くするほどカウントがはやくなる)
+        private int Pt;//取得ポイント変数
+        private int Mxp;//最大得点
         private int remain_idx;//表示させるイメージのリストインデックス
-        private List<Image> imglist;//画像リスト
+        private List<Image> ImgList;//画像リスト
         private List<Image> CharaList;//キャラクターリスト
         private bool StartFlag = false;
         private bool LastPicFlag = false;//表示が最後の絵かどうか
@@ -80,10 +80,10 @@ namespace MixPictureApp
                     //フォルダパスからリスト取得
                     string folderpath = textBox1.Text;
                     LabelTimer.Text = "画像読み込み中・・・";
-                    imglist = library.getImageList(folderpath);//画像リスト
-                    imglist = library.shuffleImgList(imglist);//それをシャッフル
+                    ImgList = library.getImageList(folderpath);//画像リスト
+                    ImgList = library.shuffleImgList(ImgList);//それをシャッフル
                                                               //画像がなかった場合
-                    if (imglist.Count == 0)//例外処理
+                    if (ImgList.Count == 0)//例外処理
                     {
                         MessageBox.Show("読み込むjpg画像ファイルが存在しません", "画像読み込みエラー");
                         StartFlag = false;
@@ -103,14 +103,17 @@ namespace MixPictureApp
                 getLevel();
                 //ボタン・ラベル設定（表示/非表示）
                 setBtnView();
-                //ラベルに秒数、ポイント表示
-                LabelPoint.Text = SPT.ToString();
-                LabelTimer.Text = TIMER_MAX.ToString();
+                //カウンター、ポインターセット
+                setCounter_Pointer();
+                //最大得点計算
+                Mxp = setMaxPt();
+                //キャラクターセット
+                setChar_BaseOnMp(Mxp);
                 //最初の画像を表示させる。
                 try
                 {
-                    remain_idx = imglist.Count;
-                    viewPictillEnd(imglist, remain_idx);
+                    remain_idx = ImgList.Count;
+                    viewPictillEnd(ImgList, remain_idx);
                 }
                 catch (Exception)
                 {
@@ -125,8 +128,8 @@ namespace MixPictureApp
                     CancellationToken token = this.cts.Token;
                 try
                 {
-                    Task.Run(() => countTimer(TIMER_MAX, token));//マルチ処理
-                    //戻り値ほしい場合 Task t1 = Task.Factory.StartNew(() => countTimer(TIMER_MAX, token));
+                    Task.Run(() => countTimer(TIMER_CNT,LevelFlag, token));//マルチ処理
+                    //戻り値ほしい場合 Task t1 = Task.Factory.StartNew(() => countTimer(TIMER_CNT, token));
                 }
                 catch (Exception)
                 {
@@ -182,13 +185,15 @@ namespace MixPictureApp
             int tim_int = Convert.ToInt32(tim_str);
             Pt = pt_int + tim_int;
             LabelPoint.Text = Convert.ToString(Pt);
+            //4.キャラクター画像更新
+            setChar_BaseOnMp(Mxp);
             }
             catch (Exception)
             {
                 Console.WriteLine("得点計算読み込みエラー");
                 ResetBtnFlag(5, 0);
             }
-            //4.絵の表示へ
+            //5.絵の表示へ
             //絵が全て表示されたら、ここでぬける
                 if (LastPicFlag == true)
                 {
@@ -202,14 +207,12 @@ namespace MixPictureApp
                     //5キャンセルトークンの再発行(ctsがインスタンス)
                     this.cts = new CancellationTokenSource();
                     CancellationToken token = this.cts.Token;
-                    //6キャラクター画像更新
-                    changePic_BaseOnPt(Pt);
-                    //7.絵の表示
-                    viewPictillEnd(imglist, remain_idx);
-                    //8.タイマー再起動
-                    LabelTimer.Text = TIMER_MAX.ToString();
+                    //6.絵の表示
+                    viewPictillEnd(ImgList, remain_idx);
+                    //7.タイマー再起動
+                    LabelTimer.Text = TIMER_CNT.ToString();
                     await Task.Delay(500);//タイマー起動を遅らせる
-                    await Task.Run(() => countTimer(TIMER_MAX, token));
+                    await Task.Run(() => countTimer(TIMER_CNT,LevelFlag, token));
                 }
         }
 
@@ -231,28 +234,22 @@ namespace MixPictureApp
         }
 
         /////////////////メソッド////////////////////
-        private void countTimer(int COUNT, CancellationToken token)
+        private void countTimer(int COUNT,int LevelFlag, CancellationToken token)
         {
             int CountSpanTime = 1000;//いじらない
-            if (LevelFlag == 0)//かんたん
+            if  (LevelFlag == 2)//むずかしい
             {
-                COUNT = 10;
+                //スピード変更
+                double tmp = CountSpanTime * HARD_SPANTIME;
+                CountSpanTime = Convert.ToInt32(tmp);
             }
-            else if  (LevelFlag == 1) //ふつう
-            {
-                COUNT = 5;
-            }
-            else if (LevelFlag == 2)//むずかしい
-            {
-                COUNT = 5;
-                CountSpanTime = HardSpanTime;//スパンを短くする
-            }
+
             for (int n = 1; n <= COUNT; n++)
             {
                 if (token.IsCancellationRequested)
                 {
                     Console.WriteLine("キャンセルトークンが渡されました");
-                    LabelTimer.Text = TIMER_MAX.ToString();
+                    LabelTimer.Text = TIMER_CNT.ToString();
                     return;
                 }
                 Thread.Sleep(CountSpanTime);
@@ -270,7 +267,7 @@ namespace MixPictureApp
                 {
                 PictureBox1.Image = list[0];//次の絵を表示
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("viewPicTillEndエラー");
                 }
@@ -284,30 +281,51 @@ namespace MixPictureApp
         }
 
 
-        private void changePic_BaseOnPt(int Pt)
+        private void setChar_BaseOnMp(int mxp)
         {
+
             try
             {
-                if (Pt > 80)
+                if (Pt >= mxp * 0.8)
+                    PictureBox2.Image = CharaList[5];
+                else if (Pt >=mxp*0.6)
                     PictureBox2.Image = CharaList[4];
-                else if (Pt > 60)
+                else if (Pt >= mxp*0.4)
                     PictureBox2.Image = CharaList[3];
-                else if (Pt > 40)
+                else if (Pt >= mxp*0.2)
                     PictureBox2.Image = CharaList[2];
-                else if (Pt > 20)
+                else if (Pt >= mxp*0.1)
                     PictureBox2.Image = CharaList[1];
-                else if (Pt > 10)
-                    PictureBox2.Image = CharaList[0];
                 else
-                     PictureBox2.Image = null;
+                     PictureBox2.Image = CharaList[0];
+
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("キャラクター画像読み込みエラーが発生しています。");
                 return;
             }
         }
-        //リセット
+        private int setMaxPt()
+        {
+            int c = ImgList.Count;
+            int cnt = TIMER_CNT;
+            int mp = c * cnt;
+            return mp;
+        }
+        private void setCounter_Pointer()
+        {
+            //ポイントセット
+            LabelPoint.Text = "0";
+            Pt = 0;
+            //カウンターセット
+            if (LevelFlag == 0) //カウント数２倍
+                TIMER_CNT = TIMER_CNT*2;
+            else
+                TIMER_CNT = 5;
+            LabelTimer.Text = TIMER_CNT.ToString();
+        }
+
 
         private void getLevel()
         {
@@ -334,8 +352,9 @@ namespace MixPictureApp
             await Task.Delay(1000);
             StartFlag = false; //スタートボタンフラグをオフにする
             LastPicFlag = false; //ストップフラグをオフにする
-            Pt = spoint; //初期ポイント
-            TIMER_MAX = stimer; //タイマー
+            Pt = 0; //初期ポイント
+            TIMER_CNT = 5;
+            TIMER_CNT = stimer; //タイマー
             BtnStart.Visible = true;//スタートボタン再表示
             BtnOpenFile.Visible = true;//フォルダ選択再表示
             BtnNextPicture.Visible = false;//画像ボタン非表示
@@ -369,6 +388,7 @@ namespace MixPictureApp
         }
         private void FinishFlag ()
         {
+            TIMER_CNT = 5;//
             StartFlag = false; //スタートボタンフラグをオフにする
             LastPicFlag = false; //ストップフラグをオフにする
             BtnStart.Visible = true;//スタートボタン再表示
@@ -377,6 +397,7 @@ namespace MixPictureApp
             BtnOpenFile.Visible = true;//フォルダ選択再表示
             BtnNextPicture.Visible = false;//画像ボタン非表示
             BtnReset.Visible = false;//リセットボタン非表示
+            Pt = 0; //ポイント初期化
             textBox1.Visible = true;//フォルダディレクトリ
             cts.Cancel();//キャンセルトークン
             PictureBox1.Image = null;

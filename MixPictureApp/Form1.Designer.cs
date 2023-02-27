@@ -40,13 +40,14 @@ namespace MixPictureApp
             this.BtnNextPicture = new System.Windows.Forms.Button();
             this.BtnStart = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.LabelTimer = new System.Windows.Forms.Label();
-            this.LabelPoint = new System.Windows.Forms.Label();
             this.PictureBox2 = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.radioBtn_Easy = new System.Windows.Forms.RadioButton();
             this.radioBtn_Normal = new System.Windows.Forms.RadioButton();
             this.radioBtn_High = new System.Windows.Forms.RadioButton();
+            this.LabelTimer = new System.Windows.Forms.Label();
+            this.LabelPoint = new System.Windows.Forms.Label();
+            this.LabelCharName = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -122,7 +123,7 @@ namespace MixPictureApp
             // 
             // BtnReset
             // 
-            this.BtnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.BtnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.BtnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnReset.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.BtnReset.Location = new System.Drawing.Point(27, 81);
@@ -165,49 +166,25 @@ namespace MixPictureApp
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 206F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.LabelTimer, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.LabelPoint, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.PictureBox2, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(496, 3);
+            this.tableLayoutPanel1.Controls.Add(this.LabelPoint, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.LabelTimer, 0, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(606, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.67196F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.32804F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(308, 189);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(197, 189);
             this.tableLayoutPanel1.TabIndex = 7;
-            // 
-            // LabelTimer
-            // 
-            this.LabelTimer.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.LabelTimer.AutoSize = true;
-            this.LabelTimer.Font = new System.Drawing.Font("MS UI Gothic", 39.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LabelTimer.Location = new System.Drawing.Point(124, 28);
-            this.LabelTimer.Name = "LabelTimer";
-            this.LabelTimer.Size = new System.Drawing.Size(181, 53);
-            this.LabelTimer.TabIndex = 0;
-            this.LabelTimer.Text = "タイマー";
-            // 
-            // LabelPoint
-            // 
-            this.LabelPoint.AccessibleName = "";
-            this.LabelPoint.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.LabelPoint.AutoSize = true;
-            this.LabelPoint.Font = new System.Drawing.Font("MS UI Gothic", 39.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LabelPoint.Location = new System.Drawing.Point(124, 122);
-            this.LabelPoint.Name = "LabelPoint";
-            this.LabelPoint.Size = new System.Drawing.Size(181, 53);
-            this.LabelPoint.TabIndex = 1;
-            this.LabelPoint.Text = "ポイント";
             // 
             // PictureBox2
             // 
-            this.PictureBox2.Location = new System.Drawing.Point(3, 3);
+            this.PictureBox2.Location = new System.Drawing.Point(500, 3);
             this.PictureBox2.Name = "PictureBox2";
-            this.PictureBox2.Size = new System.Drawing.Size(96, 103);
+            this.PictureBox2.Size = new System.Drawing.Size(100, 150);
+            this.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.PictureBox2.TabIndex = 2;
             this.PictureBox2.TabStop = false;
             // 
@@ -257,14 +234,49 @@ namespace MixPictureApp
             this.radioBtn_High.Text = "むずかしい";
             this.radioBtn_High.UseVisualStyleBackColor = true;
             // 
+            // LabelTimer
+            // 
+            this.LabelTimer.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.LabelTimer.AutoSize = true;
+            this.LabelTimer.Font = new System.Drawing.Font("MS UI Gothic", 39.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.LabelTimer.Location = new System.Drawing.Point(13, 28);
+            this.LabelTimer.Name = "LabelTimer";
+            this.LabelTimer.Size = new System.Drawing.Size(181, 53);
+            this.LabelTimer.TabIndex = 0;
+            this.LabelTimer.Text = "タイマー";
+            // 
+            // LabelPoint
+            // 
+            this.LabelPoint.AccessibleName = "";
+            this.LabelPoint.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.LabelPoint.AutoSize = true;
+            this.LabelPoint.Font = new System.Drawing.Font("MS UI Gothic", 39.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.LabelPoint.Location = new System.Drawing.Point(13, 122);
+            this.LabelPoint.Name = "LabelPoint";
+            this.LabelPoint.Size = new System.Drawing.Size(181, 53);
+            this.LabelPoint.TabIndex = 1;
+            this.LabelPoint.Text = "ポイント";
+            // 
+            // LabelCharName
+            // 
+            this.LabelCharName.AutoSize = true;
+            this.LabelCharName.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.LabelCharName.Location = new System.Drawing.Point(497, 162);
+            this.LabelCharName.Name = "LabelCharName";
+            this.LabelCharName.Size = new System.Drawing.Size(103, 16);
+            this.LabelCharName.TabIndex = 8;
+            this.LabelCharName.Text = "キャラクター";
+            // 
             // RdmPicGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightYellow;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.LabelCharName);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.panel2);
+            this.Controls.Add(this.PictureBox2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.panel1);
             this.Name = "RdmPicGame";
@@ -293,8 +305,6 @@ namespace MixPictureApp
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button BtnStart;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label LabelTimer;
-        private System.Windows.Forms.Label LabelPoint;
         private System.Windows.Forms.Button BtnNextPicture;
         private System.Windows.Forms.Button BtnReset;
         private System.Windows.Forms.PictureBox PictureBox2;
@@ -302,6 +312,9 @@ namespace MixPictureApp
         private System.Windows.Forms.RadioButton radioBtn_Easy;
         private System.Windows.Forms.RadioButton radioBtn_Normal;
         private System.Windows.Forms.RadioButton radioBtn_High;
+        private System.Windows.Forms.Label LabelPoint;
+        private System.Windows.Forms.Label LabelTimer;
+        private System.Windows.Forms.Label LabelCharName;
     }
 }
 
