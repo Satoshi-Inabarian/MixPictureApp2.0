@@ -1,0 +1,51 @@
+１。ミックスピクチャーゲーム 2.0ver
+アプデ内容
+-得点によって、正解時の音声がかわる
+-得点によって、ポイントの隣に表示させる絵をかえる
+-レベル別にわける
+1.かんたん
+-制限時間なし
+-スコアなし
+2.ふつう
+-制限時間５秒
+-スコアあり
+3.むずかしい
+-制限時間３秒
+-スコアあり
+
+
+設計
+-クラス内変数にメンバ変数を作成
+-Ptメンバ変数を元に、ピクチャーパネルに絵を表示させる関数作成
+-リセットフラグ、フィニッシュフラグ、スタートフラグにおいて、
+リセットフラグ
+tmp_intの初期設定・リセット処理
+picturebox2.imageの初期設定
+
+
+
+
+画像表示関数設計
+    private void changePic_BaseOnPt()
+     tmp_int = LabelPoint.text()
+     if tmp_int> .. //最大
+        picturebox2.image... //画像表示
+     else if tmp_int> 中間点数
+     　 picturebox2.image...
+    else if tmp_int>　最小得点
+        picturebox2.image...
+    else
+        picturebox2.image = null;
+-
+
+リセット関係
+リセットフラグ・フィニッシュフラグ
+tmp_int = 初期値
+picturebox2.image = null;
+
+
+スタートフラグ
+-picturebox2.image = "初期画像.jpg"
+
+D:\写真・動画など\紫藻寮\091106寮祭\095.JPG
+image.fromfile reading error:D:\写真・動画など\紫藻寮\091106寮祭\072.JPG
