@@ -248,7 +248,6 @@ namespace MixPictureApp
             {
                 if (token.IsCancellationRequested)
                 {
-                    Console.WriteLine("キャンセルトークンが渡されました");
                     LabelTimer.Text = TIMER_CNT.ToString();
                     return;
                 }
