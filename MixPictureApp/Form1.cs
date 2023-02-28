@@ -79,7 +79,6 @@ namespace MixPictureApp
                 {
                     //フォルダパスからリスト取得
                     string folderpath = textBox1.Text;
-                    LabelTimer.Text = "画像読み込み中・・・";
                     ImgList = library.getImageList(folderpath);//画像リスト
                     ImgList = library.shuffleImgList(ImgList);//それをシャッフル
                                                               //画像がなかった場合
