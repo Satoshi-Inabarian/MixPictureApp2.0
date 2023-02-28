@@ -331,17 +331,14 @@ namespace MixPictureApp
             if (radioBtn_Easy.Checked)
             {
                 LevelFlag = 0;
-                Console.WriteLine("「かんたん」が選択されています");
             }
             else if (radioBtn_Normal.Checked)
             {
                 LevelFlag = 1;
-                Console.WriteLine("「ふつう」が選択されています");
             }
             else if (radioBtn_High.Checked) 
             {
                 LevelFlag = 2;
-                Console.WriteLine("「むずかしい」が選択されています");
             }
         }
         private async void ResetBtnFlag(int spoint,int stimer)
