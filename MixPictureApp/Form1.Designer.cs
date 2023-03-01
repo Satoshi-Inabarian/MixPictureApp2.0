@@ -40,13 +40,13 @@ namespace MixPictureApp
             this.BtnNextPicture = new System.Windows.Forms.Button();
             this.BtnStart = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.LabelPoint = new System.Windows.Forms.Label();
+            this.LabelTimer = new System.Windows.Forms.Label();
             this.PictureBox2 = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.radioBtn_Easy = new System.Windows.Forms.RadioButton();
             this.radioBtn_Normal = new System.Windows.Forms.RadioButton();
             this.radioBtn_High = new System.Windows.Forms.RadioButton();
-            this.LabelTimer = new System.Windows.Forms.Label();
-            this.LabelPoint = new System.Windows.Forms.Label();
             this.LabelCharName = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -179,6 +179,29 @@ namespace MixPictureApp
             this.tableLayoutPanel1.Size = new System.Drawing.Size(197, 189);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
+            // LabelPoint
+            // 
+            this.LabelPoint.AccessibleName = "";
+            this.LabelPoint.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.LabelPoint.AutoSize = true;
+            this.LabelPoint.Font = new System.Drawing.Font("MS UI Gothic", 39.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.LabelPoint.Location = new System.Drawing.Point(13, 122);
+            this.LabelPoint.Name = "LabelPoint";
+            this.LabelPoint.Size = new System.Drawing.Size(181, 53);
+            this.LabelPoint.TabIndex = 1;
+            this.LabelPoint.Text = "ポイント";
+            // 
+            // LabelTimer
+            // 
+            this.LabelTimer.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.LabelTimer.AutoSize = true;
+            this.LabelTimer.Font = new System.Drawing.Font("MS UI Gothic", 39.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.LabelTimer.Location = new System.Drawing.Point(13, 28);
+            this.LabelTimer.Name = "LabelTimer";
+            this.LabelTimer.Size = new System.Drawing.Size(181, 53);
+            this.LabelTimer.TabIndex = 0;
+            this.LabelTimer.Text = "タイマー";
+            // 
             // PictureBox2
             // 
             this.PictureBox2.Location = new System.Drawing.Point(500, 3);
@@ -234,29 +257,6 @@ namespace MixPictureApp
             this.radioBtn_High.Text = "むずかしい";
             this.radioBtn_High.UseVisualStyleBackColor = true;
             // 
-            // LabelTimer
-            // 
-            this.LabelTimer.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.LabelTimer.AutoSize = true;
-            this.LabelTimer.Font = new System.Drawing.Font("MS UI Gothic", 39.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LabelTimer.Location = new System.Drawing.Point(13, 28);
-            this.LabelTimer.Name = "LabelTimer";
-            this.LabelTimer.Size = new System.Drawing.Size(181, 53);
-            this.LabelTimer.TabIndex = 0;
-            this.LabelTimer.Text = "タイマー";
-            // 
-            // LabelPoint
-            // 
-            this.LabelPoint.AccessibleName = "";
-            this.LabelPoint.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.LabelPoint.AutoSize = true;
-            this.LabelPoint.Font = new System.Drawing.Font("MS UI Gothic", 39.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LabelPoint.Location = new System.Drawing.Point(13, 122);
-            this.LabelPoint.Name = "LabelPoint";
-            this.LabelPoint.Size = new System.Drawing.Size(181, 53);
-            this.LabelPoint.TabIndex = 1;
-            this.LabelPoint.Text = "ポイント";
-            // 
             // LabelCharName
             // 
             this.LabelCharName.AutoSize = true;
@@ -266,6 +266,7 @@ namespace MixPictureApp
             this.LabelCharName.Size = new System.Drawing.Size(103, 16);
             this.LabelCharName.TabIndex = 8;
             this.LabelCharName.Text = "キャラクター";
+            this.LabelCharName.Visible = false;
             // 
             // RdmPicGame
             // 
