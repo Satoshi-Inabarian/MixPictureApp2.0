@@ -84,7 +84,7 @@ namespace MixPictureApp
                     CharaList = library.getImageList(curdir + "/Images/Characters");
                     if (ImgList.Count == 0)//例外処理
                     {
-                        MessageBox.Show("画像を読み込むことができません。フォルダにjpg画像ファイルがあるか確認してください。");
+                        MessageBox.Show("画像を読み込むことができません。フォルダにjpg,png画像ファイルがあるか確認してください。");
                         StartFlag = false;
                         return;
                     }
