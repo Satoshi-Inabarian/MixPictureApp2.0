@@ -63,8 +63,6 @@ namespace MixPictureApp
             InitializeComponent();
             //コンソール起動
             AllocConsole();
-            //キャラクター画像読み込み　※正しく設定すること
-            CharaList = library.getImageList(curdir + "/Images/Characters");
         }
 
 
@@ -82,9 +80,11 @@ namespace MixPictureApp
                     ImgList = library.getImageList(folderpath);//画像リスト
                     ImgList = library.shuffleImgList(ImgList);//それをシャッフル
                                                               //画像がなかった場合
+                  　//キャラクター画像読み込み　※正しく設定すること
+                    CharaList = library.getImageList(curdir + "/Images/Characters");
                     if (ImgList.Count == 0)//例外処理
                     {
-                        MessageBox.Show("読み込むjpg画像ファイルが存在しません", "画像読み込みエラー");
+                        MessageBox.Show("画像を読み込むことができません。フォルダにjpg,png画像ファイルがあるか確認してください。");
                         StartFlag = false;
                         return;
                     }
@@ -92,31 +92,31 @@ namespace MixPictureApp
                     SOUNDPATH = $"{curdir}\\sound\\";
                     SOUND_FINPATH = $"{curdir}\\sound\\final\\";
                 }
-                catch(Exception)
+                catch(Exception ex)
                 {
-                    Console.WriteLine("ファイル読み込みエラー");
+                    Console.WriteLine($"error occurred:{ex}");
                     StartFlag = false;
                     return;
                 }
                 //難易度フラグ取得(かんたん/ふつう/むずかしい)
                 getLevel();
                 //ボタン・ラベル設定（表示/非表示）
-                setBtnView();
+                setViewing();
                 //カウンター、ポインターセット
                 setCounter_Pointer();
                 //最大得点計算
                 Mxp = setMaxPt();
                 //キャラクターセット
-                setChar_BaseOnMp(Mxp);
+                setChar();
                 //最初の画像を表示させる。
                 try
                 {
                     remain_idx = ImgList.Count;
                     viewPictillEnd(ImgList, remain_idx);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("画像表示エラー");
+                    Console.WriteLine($"error occurred:{ex}");
                     StartFlag = false;
                     return;
                 }
@@ -130,9 +130,9 @@ namespace MixPictureApp
                     Task.Run(() => countTimer(TIMER_CNT,LevelFlag, token));//マルチ処理
                     //戻り値ほしい場合 Task t1 = Task.Factory.StartNew(() => countTimer(TIMER_CNT, token));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("マルチ処理エラー");
+                    Console.WriteLine($"error occurred:{ex}");
                     ResetBtnFlag(5, 0);
                     return;
                 }
@@ -185,11 +185,11 @@ namespace MixPictureApp
             Pt = pt_int + tim_int;
             LabelPoint.Text = Convert.ToString(Pt);
             //4.キャラクター画像更新
-            setChar_BaseOnMp(Mxp);
+            setChar();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("得点計算読み込みエラー");
+                Console.WriteLine($"error occured{ex}");
                 ResetBtnFlag(5, 0);
             }
             //5.絵の表示へ
@@ -265,9 +265,9 @@ namespace MixPictureApp
                 {
                 PictureBox1.Image = list[0];//次の絵を表示
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    Console.WriteLine("viewPicTillEndエラー");
+                    Console.WriteLine($"error occured:{e}");
                 }
          
             remain_idx = list.Count - 1;//表示した絵の数を差し引いておく。
@@ -278,29 +278,73 @@ namespace MixPictureApp
             return;
         }
 
-
-        private void setChar_BaseOnMp(int mxp)
+        private int setChar_Stage(int pt,int mxp)
         {
-
             try
             {
-                if (Pt >= mxp * 0.8)
-                    PictureBox2.Image = CharaList[5];
-                else if (Pt >=mxp*0.6)
-                    PictureBox2.Image = CharaList[4];
-                else if (Pt >= mxp*0.4)
-                    PictureBox2.Image = CharaList[3];
-                else if (Pt >= mxp*0.2)
-                    PictureBox2.Image = CharaList[2];
-                else if (Pt >= mxp*0.1)
-                    PictureBox2.Image = CharaList[1];
+                int CharStg;
+                if (pt >= mxp * 0.8)
+                    CharStg = 5;
+                else if (pt >= mxp * 0.6)
+                    CharStg = 4;
+                else if (pt >= mxp * 0.4)
+                    CharStg = 3;
+                else if (pt >= mxp * 0.2)
+                    CharStg = 2;
+                else if (pt >= mxp * 0.1)
+                    CharStg = 1;
                 else
-                     PictureBox2.Image = CharaList[0];
+                    CharStg = 0;
 
+                return CharStg;
             }
-            catch (Exception)
+            catch(Exception e)
             {
-                Console.WriteLine("キャラクター画像読み込みエラーが発生しています。");
+                Console.WriteLine($"error occurred:{e}");
+                return 0;
+            }
+        }
+
+        //キャラクター画像設定
+        private void setChar()
+        {
+            //キャラクターステージセット
+            int char_stg = setChar_Stage(Pt,Mxp);
+            //画像・ラベルセット
+            try
+            {
+                switch (char_stg)
+                {
+                    case 0:
+                        PictureBox2.Image = CharaList[0];
+                        LabelCharName.Text = "みならい";
+                        break;
+                    case 1:
+                        PictureBox2.Image = CharaList[1];
+                        LabelCharName.Text = "せんし";
+                        break;
+                    case 2:
+                        PictureBox2.Image = CharaList[2];
+                        LabelCharName.Text = "ベテラン";
+                        break;
+                    case 3:
+                        PictureBox2.Image= CharaList[3];
+                        LabelCharName.Text = "たつ人";
+                        break;
+                    case 4:
+                        PictureBox2.Image = CharaList[4];
+                        LabelCharName.Text = "マスター";
+                        break;
+                    case 5:
+                        PictureBox2.Image = CharaList[5];
+                        LabelCharName.Text = "かみさま";
+                        break;
+                }        
+            
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"error occurred:{e}");
                 return;
             }
         }
@@ -340,63 +384,102 @@ namespace MixPictureApp
                 LevelFlag = 2;
             }
         }
-        private async void ResetBtnFlag(int spoint,int stimer)
-        {
-            //全てをリセット
-            await Task.Run(() => cts.Cancel());
-            await Task.Delay(1000);
-            StartFlag = false; //スタートボタンフラグをオフにする
-            LastPicFlag = false; //ストップフラグをオフにする
-            Pt = 0; //初期ポイント
-            TIMER_CNT = 5;
-            TIMER_CNT = stimer; //タイマー
-            BtnStart.Visible = true;//スタートボタン再表示
-            BtnOpenFile.Visible = true;//フォルダ選択再表示
-            BtnNextPicture.Visible = false;//画像ボタン非表示
-            BtnReset.Visible = false;//リセットボタン非表示
-            flowLayoutPanel1.Visible = true;//ラジオボタン再表示
-            LabelTimer.Visible = true;
-            textBox1.Visible = true;
-            LabelTimer.Text = "タイマー";
-            LabelPoint.Text = "ポイント";
-            BtnStart.Text = "スタート";
-            PictureBox1.Image = null;
-            PictureBox2.Image = null;
-            return;
-        }
 
-        private void setBtnView()
+
+        private void setViewing()
         {
             //難易度によるポイント・タイムの表示・非表示
             if (LevelFlag == 0)//かんたん
             {
                 LabelTimer.Visible = false;
             }
-            //ボタン表示切り替え
+            //キャラクター表示
+             if (!LabelCharName.Visible)
+            {
+                LabelCharName.Visible = true;
+            }
+            //ボタン・その他表示切り替え
             textBox1.Visible = false;
             BtnStart.Visible = false;
             BtnNextPicture.Visible = true;
             BtnOpenFile.Visible = false;
             BtnReset.Visible = true;
+
             flowLayoutPanel1.Visible = false;//ラジオボタン非表示
-            PictureBox2.Image = null;
+            //PictureBox2.Image = null;
         }
+        private async void ResetBtnFlag(int spoint,int stimer)
+        {
+            try
+            {
+                //全てをリセット
+                await Task.Run(() => cts.Cancel());
+                await Task.Delay(1000);
+                //メモリ解放
+                if (PictureBox1.Image != null)
+                {
+                    PictureBox1.Image.Dispose();
+                }
+                if (PictureBox2.Image != null)
+                {
+                    PictureBox2.Image.Dispose();
+                }
+                StartFlag = false; //スタートボタンフラグをオフにする
+                LastPicFlag = false; //ストップフラグをオフにする
+                Pt = 0; //初期ポイント
+                TIMER_CNT = 5;
+                TIMER_CNT = stimer; //タイマー
+                BtnStart.Visible = true;//スタートボタン再表示
+                BtnOpenFile.Visible = true;//フォルダ選択再表示
+                BtnNextPicture.Visible = false;//画像ボタン非表示
+                BtnReset.Visible = false;//リセットボタン非表示
+                flowLayoutPanel1.Visible = true;//ラジオボタン再表示
+                LabelTimer.Visible = true;
+                textBox1.Visible = true;
+                LabelCharName.Visible = false;
+                LabelTimer.Text = "タイマー";
+                LabelPoint.Text = "ポイント";
+                BtnStart.Text = "スタート";
+                return;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"error occurred:{ex}");
+            }
+        } 
+        
         private void FinishFlag ()
         {
-            TIMER_CNT = 5;//
-            StartFlag = false; //スタートボタンフラグをオフにする
-            LastPicFlag = false; //ストップフラグをオフにする
-            BtnStart.Visible = true;//スタートボタン再表示
-            LabelTimer.Visible = true;//ラベルタイマー再表示
-            flowLayoutPanel1.Visible = true;//ラジオボタン再表示
-            BtnOpenFile.Visible = true;//フォルダ選択再表示
-            BtnNextPicture.Visible = false;//画像ボタン非表示
-            BtnReset.Visible = false;//リセットボタン非表示
-            Pt = 0; //ポイント初期化
-            textBox1.Visible = true;//フォルダディレクトリ
-            cts.Cancel();//キャンセルトークン
-            PictureBox1.Image = null;
-            return;
+            try
+            {
+                cts.Cancel();//キャンセルトークン
+                TIMER_CNT = 5;//
+                StartFlag = false; //スタートボタンフラグをオフにする
+                LastPicFlag = false; //ストップフラグをオフにする
+                BtnStart.Visible = true;//スタートボタン再表示
+                LabelTimer.Visible = true;//ラベルタイマー再表示
+                flowLayoutPanel1.Visible = true;//ラジオボタン再表示
+                BtnOpenFile.Visible = true;//フォルダ選択再表示
+                BtnNextPicture.Visible = false;//画像ボタン非表示
+                BtnReset.Visible = false;//リセットボタン非表示
+                Pt = 0; //ポイント初期化
+                textBox1.Visible = true;//フォルダディレクトリ
+
+                //メモリ解放
+                if (PictureBox1.Image != null)
+                {
+                    PictureBox1.Image.Dispose();
+                }
+                if (PictureBox2.Image != null)
+                {
+                    PictureBox2.Image.Dispose();
+                }
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error occured:{ex.Message}");
+            }
         }
 
         //サウンド再生系
