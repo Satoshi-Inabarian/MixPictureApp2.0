@@ -41,14 +41,16 @@ namespace MixPictureApp
         //初期ディレクトリ
         private string curdir = Environment.CurrentDirectory;
         //定数(初期値)
-        private int TIMER_CNT = 5;//タイマー初期値 定数
-        private int time_remain;//残り秒数表示の変数
         private double HARD_SPANTIME = 0.7;//難易度が高い時のカウントスパン（短くするほどカウントがはやくなる)
+        private int TIMER_CNT = 5;//タイマー初期値 定数
+        private int MXIMG_CNT = 6;
+        //変数
+        private int time_remain;//残り秒数表示の変数
         private int Pt;//取得ポイント変数
         private int Mxp;//最大得点
         private int remain_idx;//表示させるイメージのリストインデックス
         private List<Image> ImgList;//画像リスト
-        private List<Image> CharaList;//キャラクターリスト
+        private List<Image> CharaImgList;//キャラクターリスト
         private bool StartFlag = false;
         private bool LastPicFlag = false;//表示が最後の絵かどうか
         private int LevelFlag;//難易度フラグ(int型 0=easy,1=normal,2=hard)
@@ -75,13 +77,12 @@ namespace MixPictureApp
             {
                 try
                 {
-                    //フォルダパスからリスト取得
+                    //フォルダダイアログより、画像取得
                     string folderpath = textBox1.Text;
                     ImgList = library.getImageList(folderpath);//画像リスト
                     ImgList = library.shuffleImgList(ImgList);//それをシャッフル
                                                               //画像がなかった場合
-                  　//キャラクター画像読み込み　※正しく設定すること
-                    CharaList = library.getImageList(curdir + "/Images/Characters");
+
                     if (ImgList.Count == 0)//例外処理
                     {
                         MessageBox.Show("画像を読み込むことができません。フォルダにjpg,png画像ファイルがあるか確認してください。");
@@ -98,16 +99,22 @@ namespace MixPictureApp
                     StartFlag = false;
                     return;
                 }
+                //最大得点計算
+                Mxp = setMaxPt();
                 //難易度フラグ取得(かんたん/ふつう/むずかしい)
                 getLevel();
+                //キャラクター画像セット
+                setChar();
+                bool flag = is_CharImg(MXIMG_CNT);
+                if (!flag)
+                {
+                    MessageBox.Show($"画像は最大{MXIMG_CNT}つ以上用意してください", "エラー");
+                    return;
+                }
                 //ボタン・ラベル設定（表示/非表示）
                 setViewing();
                 //カウンター、ポインターセット
                 setCounter_Pointer();
-                //最大得点計算
-                Mxp = setMaxPt();
-                //キャラクターセット
-                setChar();
                 //最初の画像を表示させる。
                 try
                 {
@@ -124,7 +131,7 @@ namespace MixPictureApp
                 //タイマー起動
                     //キャンセルトークンの取得(ctsがインスタンス)
                     this.cts = new CancellationTokenSource();
-                    CancellationToken token = this.cts.Token;
+                    CancellationToken token = cts.Token;
                 try
                 {
                     Task.Run(() => countTimer(TIMER_CNT,LevelFlag, token));//マルチ処理
@@ -185,7 +192,7 @@ namespace MixPictureApp
             Pt = pt_int + tim_int;
             LabelPoint.Text = Convert.ToString(Pt);
             //4.キャラクター画像更新
-            setChar();
+            updateChar();
             }
             catch (Exception ex)
             {
@@ -203,7 +210,7 @@ namespace MixPictureApp
                 }
                 else
                 {
-                    //5キャンセルトークンの再発行(ctsがインスタンス)
+                    //5キャンセルトークンの再発行
                     this.cts = new CancellationTokenSource();
                     CancellationToken token = this.cts.Token;
                     //6.絵の表示
@@ -213,6 +220,38 @@ namespace MixPictureApp
                     await Task.Delay(500);//タイマー起動を遅らせる
                     await Task.Run(() => countTimer(TIMER_CNT,LevelFlag, token));
                 }
+        }
+
+
+
+        private async void BtnSkip_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //タイマーキャンセル
+                cts.Cancel();
+                //最後の画像であるかチェック
+                if (LastPicFlag == true)
+                {
+                    PlayShuffleSound(SOUND_FINPATH);
+                    await Task.Run(() => FinishFlag());
+                    Thread.Sleep(3000);
+                    return;
+                }
+                //画像表示
+                viewPictillEnd(ImgList, remain_idx);
+                //キャンセルトークンの再発行
+                this.cts = new CancellationTokenSource();
+                CancellationToken token = this.cts.Token;
+                //タイマー起動
+                Task.Run(() => countTimer(TIMER_CNT, LevelFlag, token));
+            }
+            catch (Exception ex)
+            {
+                Console.Write($"error occurred:{ex}");
+            }
+            
+
         }
 
         private void BtnTimer_Load(object sender, EventArgs e)
@@ -282,7 +321,7 @@ namespace MixPictureApp
             return;
         }
 
-        private int setChar_Stage(int pt,int mxp)
+        private int setCharStage(int pt,int mxp)
         {
             try
             {
@@ -299,7 +338,6 @@ namespace MixPictureApp
                     CharStg = 1;
                 else
                     CharStg = 0;
-
                 return CharStg;
             }
             catch(Exception e)
@@ -309,38 +347,114 @@ namespace MixPictureApp
             }
         }
 
-        //キャラクター画像設定
-        private void setChar()
+        //キャラクター画像選択
+        private void selCharImg()
         {
-            //キャラクターステージセット
-            int char_stg = setChar_Stage(Pt,Mxp);
-            //画像・ラベルセット
+            try
+            {
+
+
+                switch (LevelFlag)
+                {
+                    case 0:
+                        CharaImgList = library.getImageList(curdir + "/Images/Characters/Easy/");
+                        break;
+                    case 1:
+                        CharaImgList = library.getImageList(curdir + "/Images/Characters/Normal/");
+                        break;
+                    case 2:
+                        CharaImgList = library.getImageList(curdir + "/Images/Characters/Hard/");
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("キャラクター画像が読み込めませんでした。Image/Character/内の画像を確認してください。");
+                
+            }
+
+        }
+
+        //キャラクター画像設定等の関数
+
+        //画像更新
+       private void updateChar()
+        {
+            //2.キャラクターステージの取得
+            int char_stg = setCharStage(Pt, Mxp);
+            //3.画像・ラベルセット
             try
             {
                 switch (char_stg)
                 {
                     case 0:
-                        PictureBox2.Image = CharaList[0];
+                        PictureBox2.Image = CharaImgList[0];
                         LabelCharName.Text = "みならい";
                         break;
                     case 1:
-                        PictureBox2.Image = CharaList[1];
+                        PictureBox2.Image = CharaImgList[1];
                         LabelCharName.Text = "せんし";
                         break;
                     case 2:
-                        PictureBox2.Image = CharaList[2];
+                        PictureBox2.Image = CharaImgList[2];
                         LabelCharName.Text = "ベテラン";
                         break;
                     case 3:
-                        PictureBox2.Image= CharaList[3];
+                        PictureBox2.Image = CharaImgList[3];
                         LabelCharName.Text = "たつ人";
                         break;
                     case 4:
-                        PictureBox2.Image = CharaList[4];
+                        PictureBox2.Image = CharaImgList[4];
                         LabelCharName.Text = "マスター";
                         break;
                     case 5:
-                        PictureBox2.Image = CharaList[5];
+                        PictureBox2.Image = CharaImgList[5];
+                        LabelCharName.Text = "かみさま";
+                        break;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"error occurred:{e}");
+                return;
+            }
+        
+    }
+        //画像初期設定用
+        private void setChar()
+        {
+            //1.画像ファイル選択
+            selCharImg();
+            //2.キャラクターステージの取得
+            int char_stg = setCharStage(Pt,Mxp);
+            //3.画像・ラベルセット
+            try
+            {
+                switch (char_stg)
+                {
+                    case 0:
+                        PictureBox2.Image = CharaImgList[0];
+                        LabelCharName.Text = "みならい";
+                        break;
+                    case 1:
+                        PictureBox2.Image = CharaImgList[1];
+                        LabelCharName.Text = "せんし";
+                        break;
+                    case 2:
+                        PictureBox2.Image = CharaImgList[2];
+                        LabelCharName.Text = "ベテラン";
+                        break;
+                    case 3:
+                        PictureBox2.Image= CharaImgList[3];
+                        LabelCharName.Text = "たつ人";
+                        break;
+                    case 4:
+                        PictureBox2.Image = CharaImgList[4];
+                        LabelCharName.Text = "マスター";
+                        break;
+                    case 5:
+                        PictureBox2.Image = CharaImgList[5];
                         LabelCharName.Text = "かみさま";
                         break;
                 }        
@@ -375,18 +489,28 @@ namespace MixPictureApp
 
         private void getLevel()
         {
-            if (radioBtn_Easy.Checked)
-            {
+                if (radioBtn_Easy.Checked)
+                {
                 LevelFlag = 0;
-            }
-            else if (radioBtn_Normal.Checked)
-            {
+                }
+                else if (radioBtn_Normal.Checked)
+                {
                 LevelFlag = 1;
-            }
-            else if (radioBtn_High.Checked) 
-            {
+                }
+                else
+                {
                 LevelFlag = 2;
+                }
+        }
+
+        private bool is_CharImg(int mxcnt)
+        {
+            if (CharaImgList.Count < mxcnt)
+            {
+                return false;
             }
+            else
+                return true;
         }
 
 
@@ -408,6 +532,7 @@ namespace MixPictureApp
             BtnNextPicture.Visible = true;
             BtnOpenFile.Visible = false;
             BtnReset.Visible = true;
+            BtnSkip.Visible = true;
 
             flowLayoutPanel1.Visible = false;//ラジオボタン非表示
             //PictureBox2.Image = null;
@@ -437,6 +562,7 @@ namespace MixPictureApp
                 BtnOpenFile.Visible = true;//フォルダ選択再表示
                 BtnNextPicture.Visible = false;//画像ボタン非表示
                 BtnReset.Visible = false;//リセットボタン非表示
+                BtnSkip.Visible = false;//スキップボタン非表示
                 flowLayoutPanel1.Visible = true;//ラジオボタン再表示
                 LabelTimer.Visible = true;
                 textBox1.Visible = true;
@@ -466,6 +592,7 @@ namespace MixPictureApp
                 BtnOpenFile.Visible = true;//フォルダ選択再表示
                 BtnNextPicture.Visible = false;//画像ボタン非表示
                 BtnReset.Visible = false;//リセットボタン非表示
+                BtnSkip.Visible = false;//スキップボタン非表示
                 Pt = 0; //ポイント初期化
                 textBox1.Visible = true;//フォルダディレクトリ
 

@@ -48,6 +48,7 @@ namespace MixPictureApp
             this.radioBtn_Normal = new System.Windows.Forms.RadioButton();
             this.radioBtn_High = new System.Windows.Forms.RadioButton();
             this.LabelCharName = new System.Windows.Forms.Label();
+            this.BtnSkip = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -76,7 +77,7 @@ namespace MixPictureApp
             this.BtnOpenFile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BtnOpenFile.BackColor = System.Drawing.Color.OldLace;
             this.BtnOpenFile.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnOpenFile.Location = new System.Drawing.Point(217, 60);
+            this.BtnOpenFile.Location = new System.Drawing.Point(216, 56);
             this.BtnOpenFile.Name = "BtnOpenFile";
             this.BtnOpenFile.Size = new System.Drawing.Size(90, 25);
             this.BtnOpenFile.TabIndex = 2;
@@ -111,6 +112,7 @@ namespace MixPictureApp
             // 
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoSize = true;
+            this.panel2.Controls.Add(this.BtnSkip);
             this.panel2.Controls.Add(this.BtnReset);
             this.panel2.Controls.Add(this.BtnNextPicture);
             this.panel2.Controls.Add(this.BtnStart);
@@ -125,10 +127,10 @@ namespace MixPictureApp
             // 
             this.BtnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.BtnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnReset.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnReset.Location = new System.Drawing.Point(27, 81);
+            this.BtnReset.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnReset.Location = new System.Drawing.Point(27, 86);
             this.BtnReset.Name = "BtnReset";
-            this.BtnReset.Size = new System.Drawing.Size(119, 38);
+            this.BtnReset.Size = new System.Drawing.Size(100, 38);
             this.BtnReset.TabIndex = 10;
             this.BtnReset.Text = "リセット";
             this.BtnReset.UseVisualStyleBackColor = false;
@@ -139,13 +141,13 @@ namespace MixPictureApp
             // 
             this.BtnNextPicture.BackColor = System.Drawing.Color.Coral;
             this.BtnNextPicture.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnNextPicture.Font = new System.Drawing.Font("MS UI Gothic", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnNextPicture.Location = new System.Drawing.Point(27, 125);
+            this.BtnNextPicture.Font = new System.Drawing.Font("MS UI Gothic", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnNextPicture.Location = new System.Drawing.Point(18, 130);
             this.BtnNextPicture.Name = "BtnNextPicture";
             this.BtnNextPicture.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.BtnNextPicture.Size = new System.Drawing.Size(249, 80);
+            this.BtnNextPicture.Size = new System.Drawing.Size(182, 80);
             this.BtnNextPicture.TabIndex = 9;
-            this.BtnNextPicture.Text = "つぎへ";
+            this.BtnNextPicture.Text = "せいかい";
             this.BtnNextPicture.UseVisualStyleBackColor = false;
             this.BtnNextPicture.Visible = false;
             this.BtnNextPicture.Click += new System.EventHandler(this.BtnNextPicture_Click);
@@ -155,9 +157,9 @@ namespace MixPictureApp
             this.BtnStart.BackColor = System.Drawing.Color.Gold;
             this.BtnStart.Font = new System.Drawing.Font("MS UI Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.BtnStart.ForeColor = System.Drawing.Color.Black;
-            this.BtnStart.Location = new System.Drawing.Point(181, 150);
+            this.BtnStart.Location = new System.Drawing.Point(133, 147);
             this.BtnStart.Name = "BtnStart";
-            this.BtnStart.Size = new System.Drawing.Size(126, 55);
+            this.BtnStart.Size = new System.Drawing.Size(143, 55);
             this.BtnStart.TabIndex = 7;
             this.BtnStart.Text = "スタート";
             this.BtnStart.UseVisualStyleBackColor = false;
@@ -268,6 +270,19 @@ namespace MixPictureApp
             this.LabelCharName.Text = "キャラクター";
             this.LabelCharName.Visible = false;
             // 
+            // BtnSkip
+            // 
+            this.BtnSkip.BackColor = System.Drawing.Color.Yellow;
+            this.BtnSkip.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnSkip.Location = new System.Drawing.Point(133, 85);
+            this.BtnSkip.Name = "BtnSkip";
+            this.BtnSkip.Size = new System.Drawing.Size(143, 39);
+            this.BtnSkip.TabIndex = 9;
+            this.BtnSkip.Text = "スキップ";
+            this.BtnSkip.UseVisualStyleBackColor = false;
+            this.BtnSkip.Visible = false;
+            this.BtnSkip.Click += new System.EventHandler(this.BtnSkip_Click);
+            // 
             // RdmPicGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -316,6 +331,7 @@ namespace MixPictureApp
         private System.Windows.Forms.Label LabelPoint;
         private System.Windows.Forms.Label LabelTimer;
         private System.Windows.Forms.Label LabelCharName;
+        private System.Windows.Forms.Button BtnSkip;
     }
 }
 

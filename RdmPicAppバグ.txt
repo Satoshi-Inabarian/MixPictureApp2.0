@@ -1,0 +1,29 @@
+★追加機能
+
+★修正・バグ対策
+setChar(lflag)ないに
+入れ子関数 selectImg(lflag)を作成
+・最終画像のさいは、ボタンを「さいご」に変更
+
+
+・bool LastPFlag = IsLastPic(ImgList,remain_idx)作成
+・viewPicTillEndの名前変更  bool型の戻り値ありの関数に変更し、isLastPicを入れ子関数へ
+private bool viewPictillEnd
+    １．画像表示
+    ２.残りインデックスカウント
+    ３．インデックスが最終だったら、lastPFlag = true;
+    ４，戻り値として返す
+・end()関数を作成
+    reset、finishの要素を統合し、引数にflagを追加し、それによって内容を分岐させる。
+    end(finish_flag,reest_flag,COUNT,POINT)
+    finish_flag,lastpic_flagはメンバ変数にしないように書き換える。
+    sound_final(reset_flag)を作成し、入れ子関数にする。
+        if (!flag=true) play sound
+・メンバ変数を減らす
+ SOUND_PATH,SOUND_FINPATHは、メンバ変数にせずに、コンストラクタ内で、直接初期値設定を行う。
+ ・コンストラクタ内に初期値を追記
+    CharaList
+    SOUNDPATH系
+
+
+★バグ
