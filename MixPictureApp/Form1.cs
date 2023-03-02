@@ -41,7 +41,7 @@ namespace MixPictureApp
         //初期ディレクトリ
         private string curdir = Environment.CurrentDirectory;
         //定数(初期値)
-        private int TIMER_CNT = 5;//タイマー初期値　バグ防止のため初期値は５秒にしている
+        private int TIMER_CNT = 5;//タイマー初期値 定数
         private int time_remain;//残り秒数表示の変数
         private double HARD_SPANTIME = 0.7;//難易度が高い時のカウントスパン（短くするほどカウントがはやくなる)
         private int Pt;//取得ポイント変数
@@ -235,6 +235,8 @@ namespace MixPictureApp
         /////////////////メソッド////////////////////
         private void countTimer(int COUNT,int LevelFlag, CancellationToken token)
         {
+            Thread.Sleep(500);
+            
             int CountSpanTime = 1000;//いじらない
             if  (LevelFlag == 2)//むずかしい
             {
@@ -243,16 +245,18 @@ namespace MixPictureApp
                 CountSpanTime = Convert.ToInt32(tmp);
             }
 
-            for (int n = 1; n <= COUNT; n++)
+            for (int n = 0; n <= COUNT; n++)
             {
+                //1.残り秒数表示
+                time_remain = COUNT - n;
+                LabelTimer.Text = time_remain.ToString();
+                //2.カウント
+                Thread.Sleep(CountSpanTime);
                 if (token.IsCancellationRequested)
                 {
                     LabelTimer.Text = TIMER_CNT.ToString();
                     return;
                 }
-                Thread.Sleep(CountSpanTime);
-                time_remain = COUNT - n;
-                LabelTimer.Text = time_remain.ToString();
             }
         }
 
