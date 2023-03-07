@@ -48,11 +48,9 @@ namespace MixPictureApp
         private int time_remain;//残り秒数表示の変数
         private int Pt;//取得ポイント変数
         private int Mxp;//最大得点
-        private int remain_idx;//表示させるイメージのリストインデックス
         private List<Image> ImgList;//画像リスト
         private List<Image> CharaImgList;//キャラクターリスト
         private bool StartFlag = false;
-        private bool LastPicFlag = false;//表示が最後の絵かどうか
         private int LevelFlag;//難易度フラグ(int型 0=easy,1=normal,2=hard)
         private string SOUNDPATH;
         private string SOUND_FINPATH;
@@ -118,8 +116,7 @@ namespace MixPictureApp
                 //最初の画像を表示させる。
                 try
                 {
-                    remain_idx = ImgList.Count;
-                    viewPictillEnd(ImgList, remain_idx);
+                    viewAndDel_Picidx(ImgList);
                 }
                 catch (Exception ex)
                 {
@@ -199,9 +196,12 @@ namespace MixPictureApp
                 Console.WriteLine($"error occured{ex}");
                 ResetBtnFlag(5, 0);
             }
-            //5.絵の表示へ
-            //絵が全て表示されたら、ここでぬける
-                if (LastPicFlag == true)
+
+            //5.絵の表示分岐へ
+            //残りの絵がない場合
+            try
+            {
+                if (ImgList.Count < 1)
                 {
                     PlayShuffleSound(SOUND_FINPATH);
                     await Task.Run(() => FinishFlag());
@@ -210,16 +210,29 @@ namespace MixPictureApp
                 }
                 else
                 {
-                    //5キャンセルトークンの再発行
+                    //5タイマーキャンセルトークンの再発行
                     this.cts = new CancellationTokenSource();
                     CancellationToken token = this.cts.Token;
-                    //6.絵の表示
-                    viewPictillEnd(ImgList, remain_idx);
-                    //7.タイマー再起動
+                    //6.最終フラグ確認
+                    int idx_remain = ImgList.Count;
+                    Console.WriteLine($"残り画像枚数{idx_remain}");
+                    bool flag = isLastPic(idx_remain);
+                    if (flag)
+                    {
+                        BtnNextPicture.Text = "さいごだ！";
+                    }
+                    //7.絵の表示
+                    viewAndDel_Picidx(ImgList);
+                    //8.タイマー再起動
                     LabelTimer.Text = TIMER_CNT.ToString();
                     await Task.Delay(500);//タイマー起動を遅らせる
-                    await Task.Run(() => countTimer(TIMER_CNT,LevelFlag, token));
+                    await Task.Run(() => countTimer(TIMER_CNT, LevelFlag, token));
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error occurred{ex}");
+            }
         }
 
 
@@ -231,7 +244,7 @@ namespace MixPictureApp
                 //タイマーキャンセル
                 cts.Cancel();
                 //最後の画像であるかチェック
-                if (LastPicFlag == true)
+                if (ImgList.Count == 0) 
                 {
                     PlayShuffleSound(SOUND_FINPATH);
                     await Task.Run(() => FinishFlag());
@@ -239,7 +252,7 @@ namespace MixPictureApp
                     return;
                 }
                 //画像表示
-                viewPictillEnd(ImgList, remain_idx);
+                viewAndDel_Picidx(ImgList);
                 //キャンセルトークンの再発行
                 this.cts = new CancellationTokenSource();
                 CancellationToken token = this.cts.Token;
@@ -300,25 +313,20 @@ namespace MixPictureApp
         }
 
         //画像表示
-        public void viewPictillEnd(List<Image> list, int remain_idx)
+        public int viewAndDel_Picidx(List<Image> list)
             {
             PictureBox1.Image = null;//リセット
-            list.RemoveAt(0);        //前回表示した絵をリストから削除
             try
-                {
-                PictureBox1.Image = list[0];//次の絵を表示
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"error occured:{e}");
-                }
-         
-            remain_idx = list.Count - 1;//表示した絵の数を差し引いておく。
-            if (remain_idx == 0)
             {
-                LastPicFlag = true;
+                PictureBox1.Image = list[0];//絵を表示
+
+                list.RemoveAt(0);        //表示した絵を削除
             }
-            return;
+            catch (Exception e)
+            {
+                Console.WriteLine($"error occured:{e}");
+            }
+            return ImgList.Count;
         }
 
         private int setCharStage(int pt,int mxp)
@@ -533,6 +541,8 @@ namespace MixPictureApp
             BtnOpenFile.Visible = false;
             BtnReset.Visible = true;
             BtnSkip.Visible = true;
+            BtnNextPicture.Text = "せいかい";
+
 
             flowLayoutPanel1.Visible = false;//ラジオボタン非表示
             //PictureBox2.Image = null;
@@ -554,7 +564,6 @@ namespace MixPictureApp
                     PictureBox2.Image.Dispose();
                 }
                 StartFlag = false; //スタートボタンフラグをオフにする
-                LastPicFlag = false; //ストップフラグをオフにする
                 Pt = 0; //初期ポイント
                 TIMER_CNT = 5;
                 TIMER_CNT = stimer; //タイマー
@@ -570,6 +579,7 @@ namespace MixPictureApp
                 LabelTimer.Text = "タイマー";
                 LabelPoint.Text = "ポイント";
                 BtnStart.Text = "スタート";
+                BtnNextPicture.Text = "せいかい";
                 return;
             }
             catch(Exception ex)
@@ -585,7 +595,6 @@ namespace MixPictureApp
                 cts.Cancel();//キャンセルトークン
                 TIMER_CNT = 5;//
                 StartFlag = false; //スタートボタンフラグをオフにする
-                LastPicFlag = false; //ストップフラグをオフにする
                 BtnStart.Visible = true;//スタートボタン再表示
                 LabelTimer.Visible = true;//ラベルタイマー再表示
                 flowLayoutPanel1.Visible = true;//ラジオボタン再表示
@@ -632,6 +641,14 @@ namespace MixPictureApp
         private void Playsound(string path)
         {
             Microsoft.SmallBasic.Library.Sound.Play(path);
+        }
+
+        private bool isLastPic(int idx)
+        {
+            if (idx > 1)
+                return false;
+            else
+                return true;
         }
 
     }
