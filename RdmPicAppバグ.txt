@@ -1,9 +1,7 @@
 ★追加機能
-
-★修正・バグ対策
-setChar(lflag)ないに
-入れ子関数 selectImg(lflag)を作成
 ・最終画像のさいは、ボタンを「さいご」に変更
+★修正・バグ対策
+
 
 
 ・bool LastPFlag = IsLastPic(ImgList,remain_idx)作成
@@ -26,4 +24,39 @@ private bool viewPictillEnd
     SOUNDPATH系
 
 
-★バグ
+private int viewAndDel_Picidx(imglist)
+
+/1.画像表示
+picturebox1.image = list[0]
+//2.画像インデックスを差し引く
+list.RemoveAt[0]
+//3.残りidxを返す
+return list.Count
+
+private bool is LastPic(idx)
+{
+    try {
+    if (img_idx > 1)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+    }
+    catch (Exception e)
+    Console.Writeline($"error occurred:{e}");
+
+}
+
+/1.画像を表示し、インデックスを削除
+int idx = viewAndDel_Picidx(imglist)
+//2.最終画像フラグ確認
+bool flag = isLastPic(idx)
+//3.ボタンテキスト変更
+if (flag)//最終
+{
+    Btn.Next_Click.Text = "さいご";
+}
+
