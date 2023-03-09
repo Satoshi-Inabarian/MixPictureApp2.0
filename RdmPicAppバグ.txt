@@ -1,62 +1,15 @@
 ★追加機能
-・最終画像のさいは、ボタンを「さいご」に変更
+終了ボタン
+コンソール非表示？
+文字機能追加
 ★修正・バグ対策
-
-
-
-・bool LastPFlag = IsLastPic(ImgList,remain_idx)作成
-・viewPicTillEndの名前変更  bool型の戻り値ありの関数に変更し、isLastPicを入れ子関数へ
-private bool viewPictillEnd
-    １．画像表示
-    ２.残りインデックスカウント
-    ３．インデックスが最終だったら、lastPFlag = true;
-    ４，戻り値として返す
-・end()関数を作成
-    reset、finishの要素を統合し、引数にflagを追加し、それによって内容を分岐させる。
-    end(finish_flag,reest_flag,COUNT,POINT)
-    finish_flag,lastpic_flagはメンバ変数にしないように書き換える。
-    sound_final(reset_flag)を作成し、入れ子関数にする。
-        if (!flag=true) play sound
-・メンバ変数を減らす
- SOUND_PATH,SOUND_FINPATHは、メンバ変数にせずに、コンストラクタ内で、直接初期値設定を行う。
- ・コンストラクタ内に初期値を追記
-    CharaList
-    SOUNDPATH系
-
-
-private int viewAndDel_Picidx(imglist)
-
-/1.画像表示
-picturebox1.image = list[0]
-//2.画像インデックスを差し引く
-list.RemoveAt[0]
-//3.残りidxを返す
-return list.Count
-
-private bool is LastPic(idx)
-{
-    try {
-    if (img_idx > 1)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-    }
-    catch (Exception e)
-    Console.Writeline($"error occurred:{e}");
-
-}
-
-/1.画像を表示し、インデックスを削除
-int idx = viewAndDel_Picidx(imglist)
-//2.最終画像フラグ確認
-bool flag = isLastPic(idx)
-//3.ボタンテキスト変更
-if (flag)//最終
-{
-    Btn.Next_Click.Text = "さいご";
-}
-
+・setChar,setCharStage,selCharimg(int level)の使用変更
+    -getlevel()のint lv戻り値によって、charimgListを選択するように変更。
+    ★メリット　画像はあぷり立ち上げ時に読み込むので、スタートボタンから画像表示までの速度があがる
+    -キャラクター画像のリストへの格納は、コンストラクタの中で行う
+RdmPicGame(){
+    charimgList1  library.getimagelist(Enviroment.CurrentDirrectory..)
+    charimgList2  library.getimagelist(Enviroment.CurrentDirrectory..)
+    charimgList3  ....
+            }
+        

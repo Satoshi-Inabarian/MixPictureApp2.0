@@ -25,6 +25,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 //自作ライブラリ
 using SatoLib;
 using System.Security.Cryptography.X509Certificates;
+using System.Runtime.InteropServices;
 
 namespace MixPictureApp
 {
@@ -37,10 +38,13 @@ namespace MixPictureApp
         private CancellationTokenSource cts = null; // キャンセルトークン
 
         /// <summary>
-        /// /メンバ変数（インスタンス変数）※静的関数は使えないので注意！(staticなど・・・)
+        /// /メンバ変数（インスタンス変数）※静的関数は使えないので注意！(static)
         //初期ディレクトリ
         private string curdir = Environment.CurrentDirectory;
         //定数(初期値)
+        //サウンドディレクトリ設定
+        private string SOUNDPATH = Environment.CurrentDirectory + "\\sound\\";
+        private string SOUND_FINPATH = Environment.CurrentDirectory + "\\sound\\final\\";
         private double HARD_SPANTIME = 0.7;//難易度が高い時のカウントスパン（短くするほどカウントがはやくなる)
         private int TIMER_CNT = 5;//タイマー初期値 定数
         private int MXIMG_CNT = 6;
@@ -51,9 +55,6 @@ namespace MixPictureApp
         private List<Image> ImgList;//画像リスト
         private List<Image> CharaImgList;//キャラクターリスト
         private bool StartFlag = false;
-        private int LevelFlag;//難易度フラグ(int型 0=easy,1=normal,2=hard)
-        private string SOUNDPATH;
-        private string SOUND_FINPATH;
         /// </summary>
 
 
@@ -87,9 +88,6 @@ namespace MixPictureApp
                         StartFlag = false;
                         return;
                     }
-                    //音楽フォルダディレクトリ
-                    SOUNDPATH = $"{curdir}\\sound\\";
-                    SOUND_FINPATH = $"{curdir}\\sound\\final\\";
                 }
                 catch(Exception ex)
                 {
@@ -97,12 +95,14 @@ namespace MixPictureApp
                     StartFlag = false;
                     return;
                 }
+
+                //カウンター、ポインターセット
+                int lv = setCnt_Pt_Lv();
                 //最大得点計算
                 Mxp = setMaxPt();
-                //難易度フラグ取得(かんたん/ふつう/むずかしい)
-                getLevel();
+                //Console.WriteLine("【L106】TIMER_CNT:{0},POINT:{1}", TIMER_CNT, Pt);
                 //キャラクター画像セット
-                setChar();
+                setChar(lv);
                 bool flag = is_CharImg(MXIMG_CNT);
                 if (!flag)
                 {
@@ -110,9 +110,7 @@ namespace MixPictureApp
                     return;
                 }
                 //ボタン・ラベル設定（表示/非表示）
-                setViewing();
-                //カウンター、ポインターセット
-                setCounter_Pointer();
+                setViewing(lv);
                 //最初の画像を表示させる。
                 try
                 {
@@ -131,13 +129,13 @@ namespace MixPictureApp
                     CancellationToken token = cts.Token;
                 try
                 {
-                    Task.Run(() => countTimer(TIMER_CNT,LevelFlag, token));//マルチ処理
+                    Task.Run(() => countTimer(TIMER_CNT,lv, token));//マルチ処理
                     //戻り値ほしい場合 Task t1 = Task.Factory.StartNew(() => countTimer(TIMER_CNT, token));
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"error occurred:{ex}");
-                    ResetBtnFlag(5, 0);
+                    Reset(5, 0);
                     return;
                 }
                 return;
@@ -194,7 +192,7 @@ namespace MixPictureApp
             catch (Exception ex)
             {
                 Console.WriteLine($"error occured{ex}");
-                ResetBtnFlag(5, 0);
+                Reset(5, 0);
             }
 
             //5.絵の表示分岐へ
@@ -204,7 +202,7 @@ namespace MixPictureApp
                 if (ImgList.Count < 1)
                 {
                     PlayShuffleSound(SOUND_FINPATH);
-                    await Task.Run(() => FinishFlag());
+                    await Task.Run(() => End(1));
                     Thread.Sleep(3000);
                     return;
                 }
@@ -215,7 +213,6 @@ namespace MixPictureApp
                     CancellationToken token = this.cts.Token;
                     //6.最終フラグ確認
                     int idx_remain = ImgList.Count;
-                    Console.WriteLine($"残り画像枚数{idx_remain}");
                     bool flag = isLastPic(idx_remain);
                     if (flag)
                     {
@@ -225,8 +222,9 @@ namespace MixPictureApp
                     viewAndDel_Picidx(ImgList);
                     //8.タイマー再起動
                     LabelTimer.Text = TIMER_CNT.ToString();
+                    int lv = getLevel();
                     await Task.Delay(500);//タイマー起動を遅らせる
-                    await Task.Run(() => countTimer(TIMER_CNT, LevelFlag, token));
+                    await Task.Run(() => countTimer(TIMER_CNT, lv, token));
                 }
             }
             catch (Exception ex)
@@ -247,7 +245,7 @@ namespace MixPictureApp
                 if (ImgList.Count == 0) 
                 {
                     PlayShuffleSound(SOUND_FINPATH);
-                    await Task.Run(() => FinishFlag());
+                    await Task.Run(() => End(1));
                     Thread.Sleep(3000);
                     return;
                 }
@@ -257,7 +255,8 @@ namespace MixPictureApp
                 this.cts = new CancellationTokenSource();
                 CancellationToken token = this.cts.Token;
                 //タイマー起動
-                Task.Run(() => countTimer(TIMER_CNT, LevelFlag, token));
+                int lv= getLevel();
+                Task.Run(() => countTimer(TIMER_CNT, lv, token));
             }
             catch (Exception ex)
             {
@@ -281,16 +280,17 @@ namespace MixPictureApp
                 return;
             }
             cts.Cancel();
-            ResetBtnFlag(0, 5);
+            bool eflag = End(0);
+            Console.WriteLine("flag:{0}",eflag);
         }
 
         /////////////////メソッド////////////////////
-        private void countTimer(int COUNT,int LevelFlag, CancellationToken token)
+        private void countTimer(int COUNT,int level, CancellationToken token)
         {
             Thread.Sleep(500);
             
             int CountSpanTime = 1000;//いじらない
-            if  (LevelFlag == 2)//むずかしい
+            if  (level == 2)//むずかしい
             {
                 //スピード変更
                 double tmp = CountSpanTime * HARD_SPANTIME;
@@ -356,13 +356,13 @@ namespace MixPictureApp
         }
 
         //キャラクター画像選択
-        private void selCharImg()
+        private void selCharImg(int level)
         {
             try
             {
 
 
-                switch (LevelFlag)
+                switch (level)
                 {
                     case 0:
                         CharaImgList = library.getImageList(curdir + "/Images/Characters/Easy/");
@@ -430,10 +430,10 @@ namespace MixPictureApp
         
     }
         //画像初期設定用
-        private void setChar()
+        private void setChar(int level)
         {
             //1.画像ファイル選択
-            selCharImg();
+            selCharImg(level);
             //2.キャラクターステージの取得
             int char_stg = setCharStage(Pt,Mxp);
             //3.画像・ラベルセット
@@ -481,34 +481,38 @@ namespace MixPictureApp
             int mp = c * cnt;
             return mp;
         }
-        private void setCounter_Pointer()
+        private int setCnt_Pt_Lv()
         {
-            //ポイントセット
-            LabelPoint.Text = "0";
-            Pt = 0;
-            //カウンターセット
-            if (LevelFlag == 0) //カウント数２倍
+            //ポイント、カウントを初期化
+            initCNT_PT();
+            //難易度レベルを取得
+            int lv = getLevel();
+            //レベルによるカウント数の分岐
+            if (lv == 0) //かんたん　カウント２倍へ
                 TIMER_CNT = TIMER_CNT*2;
             else
-                TIMER_CNT = 5;
             LabelTimer.Text = TIMER_CNT.ToString();
+            return lv;
         }
 
 
-        private void getLevel()
+        private int getLevel()
         {
+            int lv;
                 if (radioBtn_Easy.Checked)
                 {
-                LevelFlag = 0;
+                lv = 0;
                 }
                 else if (radioBtn_Normal.Checked)
                 {
-                LevelFlag = 1;
+                lv = 1;
                 }
                 else
                 {
-                LevelFlag = 2;
+                lv = 2;
                 }
+
+            return lv;
         }
 
         private bool is_CharImg(int mxcnt)
@@ -522,10 +526,10 @@ namespace MixPictureApp
         }
 
 
-        private void setViewing()
+        private void setViewing(int lv)
         {
             //難易度によるポイント・タイムの表示・非表示
-            if (LevelFlag == 0)//かんたん
+            if (lv == 0)//かんたん
             {
                 LabelTimer.Visible = false;
             }
@@ -547,7 +551,7 @@ namespace MixPictureApp
             flowLayoutPanel1.Visible = false;//ラジオボタン非表示
             //PictureBox2.Image = null;
         }
-        private async void ResetBtnFlag(int spoint,int stimer)
+        private async void Reset(int spoint,int stimer)
         {
             try
             {
@@ -563,10 +567,9 @@ namespace MixPictureApp
                 {
                     PictureBox2.Image.Dispose();
                 }
+
+                initCNT_PT();//タイマー初期化
                 StartFlag = false; //スタートボタンフラグをオフにする
-                Pt = 0; //初期ポイント
-                TIMER_CNT = 5;
-                TIMER_CNT = stimer; //タイマー
                 BtnStart.Visible = true;//スタートボタン再表示
                 BtnOpenFile.Visible = true;//フォルダ選択再表示
                 BtnNextPicture.Visible = false;//画像ボタン非表示
@@ -576,6 +579,7 @@ namespace MixPictureApp
                 LabelTimer.Visible = true;
                 textBox1.Visible = true;
                 LabelCharName.Visible = false;
+                PictureBox2.Image= null;
                 LabelTimer.Text = "タイマー";
                 LabelPoint.Text = "ポイント";
                 BtnStart.Text = "スタート";
@@ -588,12 +592,12 @@ namespace MixPictureApp
             }
         } 
         
-        private void FinishFlag ()
+        private void Finish()
         {
             try
             {
+                //initCNT_PT();//カウンター、ポインター初期化
                 cts.Cancel();//キャンセルトークン
-                TIMER_CNT = 5;//
                 StartFlag = false; //スタートボタンフラグをオフにする
                 BtnStart.Visible = true;//スタートボタン再表示
                 LabelTimer.Visible = true;//ラベルタイマー再表示
@@ -602,7 +606,6 @@ namespace MixPictureApp
                 BtnNextPicture.Visible = false;//画像ボタン非表示
                 BtnReset.Visible = false;//リセットボタン非表示
                 BtnSkip.Visible = false;//スキップボタン非表示
-                Pt = 0; //ポイント初期化
                 textBox1.Visible = true;//フォルダディレクトリ
 
                 //メモリ解放
@@ -622,6 +625,30 @@ namespace MixPictureApp
             }
         }
 
+        
+        private bool End(int mode,int CNT = 5,int POINT = 5)// 0=reset,1=finishで切り替え。cnt,pointは初期値設定済み
+        {
+            try
+            {
+                switch (mode)
+                {
+                    case 0://reset
+                        Reset(5, 0);
+                        Console.WriteLine("reset has been done");
+                        return true;
+                    case 1://finish
+                        Finish();
+                        return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("error occurred:{0}", ex);
+                return false;
+            }
+            return false;
+        }
+
         //サウンド再生系
         private void PlayShuffleSound(string path)
         {
@@ -632,6 +659,13 @@ namespace MixPictureApp
             Playsound(mp3[rdm_idx]);
         }
 
+        private void initCNT_PT()
+        {
+            TIMER_CNT = 5;
+            Pt = 0;
+            LabelPoint.Text = Convert.ToString(Pt);
+
+        }
 
         private void Stopsound(string path)
         {
