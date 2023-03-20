@@ -13,4 +13,83 @@ RdmPicGame(){
     charimgList2  library.getimagelist(Enviroment.CurrentDirrectory..)
     charimgList3  ....
             }
-        
+
+
+・テキストランダムタブの作成について
+・内部設計
+０.テキストモード専用のボタン表示
+１．モード選択
+２．モードのチェック
+３．モードによるボタン・タブ等の切り替え（表示・非表示）
+４．ファイル読み込み分岐(txt or jpg(png))
+
+
+
+
+
+★class Viewing　を作成　今後の予定・・・！！！継承を使って、トライ！
+今後の表示内容の追記・変更が簡単になるようにviewingクラスを作成する（テキスト、絵、どっちも、などなど)
+
+１．init_Viewing(今後派生する可能性があるため、必要最低限のvmode,extension typeのみ)
+//メンバ
+int Vmode; //表示形式(テキストorピクチャー)
+
+Class init_Viewing{
+
+//コンストラクタ
+init_Viewing()
+vmode = init.vmode;
+
+setMode(int vmode)//1.表示モードセット
+{
+    switch vmode
+case0...//pic
+case1...//word
+return vmode
+}
+
+setExntensionType()2.拡張子セット
+
+swich(setmode.arg)
+
+case 0...(例えば0=pictureの場合)
+extype[] = {".jpg",".png"}
+case 1///
+extype [] = {".txt",".css"}
+
+
+
+}
+
+
+２．init_viewingを継承し、（絵と、言葉として派生）
+
+
+//class Viewing_Word  //class viewingを継承して利用
+
+//メンバ
+list <string> lists 
+//コンストラクタ
+....
+//ファイルパスから文字列取り込み
+
+//文字列を返す
+retrun list<string> list_string
+class viewing_Image //class viewingを継承して利用
+
+→メインソースのシャッフルへつなぐ
+
+//メンバ
+list <image> listp
+
+//コンストラクタ
+....
+
+//ファイルパスから画像取り込み
+
+
+//画像リストを返す
+
+return list<image> list_image
+
+→メインソースのシャッフルへつなぐ

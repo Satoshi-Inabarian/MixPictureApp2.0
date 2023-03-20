@@ -32,10 +32,10 @@ namespace MixPictureApp
         {
             this.PictureBox1 = new System.Windows.Forms.PictureBox();
             this.BtnOpenFile = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.DialogFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.BtnSkip = new System.Windows.Forms.Button();
             this.BtnReset = new System.Windows.Forms.Button();
             this.BtnNextPicture = new System.Windows.Forms.Button();
             this.BtnStart = new System.Windows.Forms.Button();
@@ -48,13 +48,20 @@ namespace MixPictureApp
             this.radioBtn_Normal = new System.Windows.Forms.RadioButton();
             this.radioBtn_High = new System.Windows.Forms.RadioButton();
             this.LabelCharName = new System.Windows.Forms.Label();
-            this.BtnSkip = new System.Windows.Forms.Button();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabPagePic = new System.Windows.Forms.TabPage();
+            this.tabPageWord = new System.Windows.Forms.TabPage();
+            this.TextBoxWord = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
-            this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox2)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.tabPagePic.SuspendLayout();
+            this.tabPageWord.SuspendLayout();
             this.SuspendLayout();
             // 
             // PictureBox1
@@ -63,9 +70,9 @@ namespace MixPictureApp
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PictureBox1.BackColor = System.Drawing.Color.Linen;
-            this.PictureBox1.Location = new System.Drawing.Point(-1, 3);
+            this.PictureBox1.Location = new System.Drawing.Point(0, 3);
             this.PictureBox1.Name = "PictureBox1";
-            this.PictureBox1.Size = new System.Drawing.Size(486, 449);
+            this.PictureBox1.Size = new System.Drawing.Size(472, 408);
             this.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBox1.TabIndex = 0;
             this.PictureBox1.TabStop = false;
@@ -84,17 +91,6 @@ namespace MixPictureApp
             this.BtnOpenFile.Text = "フォルダ選択";
             this.BtnOpenFile.UseVisualStyleBackColor = false;
             this.BtnOpenFile.Click += new System.EventHandler(this.BtnOpenFile_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.PictureBox1);
-            this.panel1.Location = new System.Drawing.Point(2, -2);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(492, 452);
-            this.panel1.TabIndex = 5;
             // 
             // textBox1
             // 
@@ -118,10 +114,23 @@ namespace MixPictureApp
             this.panel2.Controls.Add(this.BtnStart);
             this.panel2.Controls.Add(this.textBox1);
             this.panel2.Controls.Add(this.BtnOpenFile);
-            this.panel2.Location = new System.Drawing.Point(493, 228);
+            this.panel2.Location = new System.Drawing.Point(495, 239);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(310, 219);
             this.panel2.TabIndex = 6;
+            // 
+            // BtnSkip
+            // 
+            this.BtnSkip.BackColor = System.Drawing.Color.Yellow;
+            this.BtnSkip.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnSkip.Location = new System.Drawing.Point(133, 85);
+            this.BtnSkip.Name = "BtnSkip";
+            this.BtnSkip.Size = new System.Drawing.Size(143, 39);
+            this.BtnSkip.TabIndex = 9;
+            this.BtnSkip.Text = "スキップ";
+            this.BtnSkip.UseVisualStyleBackColor = false;
+            this.BtnSkip.Visible = false;
+            this.BtnSkip.Click += new System.EventHandler(this.BtnSkip_Click);
             // 
             // BtnReset
             // 
@@ -173,7 +182,7 @@ namespace MixPictureApp
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Controls.Add(this.LabelPoint, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.LabelTimer, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(606, 3);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(608, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.67196F));
@@ -206,7 +215,8 @@ namespace MixPictureApp
             // 
             // PictureBox2
             // 
-            this.PictureBox2.Location = new System.Drawing.Point(500, 3);
+            this.PictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.PictureBox2.Location = new System.Drawing.Point(495, 1);
             this.PictureBox2.Name = "PictureBox2";
             this.PictureBox2.Size = new System.Drawing.Size(100, 150);
             this.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -219,7 +229,7 @@ namespace MixPictureApp
             this.flowLayoutPanel1.Controls.Add(this.radioBtn_Easy);
             this.flowLayoutPanel1.Controls.Add(this.radioBtn_Normal);
             this.flowLayoutPanel1.Controls.Add(this.radioBtn_High);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(520, 195);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(522, 206);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(283, 27);
             this.flowLayoutPanel1.TabIndex = 0;
@@ -261,45 +271,86 @@ namespace MixPictureApp
             // 
             // LabelCharName
             // 
+            this.LabelCharName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LabelCharName.AutoSize = true;
             this.LabelCharName.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LabelCharName.Location = new System.Drawing.Point(497, 162);
+            this.LabelCharName.Location = new System.Drawing.Point(499, 176);
             this.LabelCharName.Name = "LabelCharName";
             this.LabelCharName.Size = new System.Drawing.Size(103, 16);
             this.LabelCharName.TabIndex = 8;
             this.LabelCharName.Text = "キャラクター";
             this.LabelCharName.Visible = false;
             // 
-            // BtnSkip
+            // flowLayoutPanel2
             // 
-            this.BtnSkip.BackColor = System.Drawing.Color.Yellow;
-            this.BtnSkip.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnSkip.Location = new System.Drawing.Point(133, 85);
-            this.BtnSkip.Name = "BtnSkip";
-            this.BtnSkip.Size = new System.Drawing.Size(143, 39);
-            this.BtnSkip.TabIndex = 9;
-            this.BtnSkip.Text = "スキップ";
-            this.BtnSkip.UseVisualStyleBackColor = false;
-            this.BtnSkip.Visible = false;
-            this.BtnSkip.Click += new System.EventHandler(this.BtnSkip_Click);
+            this.flowLayoutPanel2.Controls.Add(this.tabControl);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 1);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(489, 457);
+            this.flowLayoutPanel2.TabIndex = 9;
+            // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tabPagePic);
+            this.tabControl.Controls.Add(this.tabPageWord);
+            this.tabControl.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.tabControl.ItemSize = new System.Drawing.Size(100, 35);
+            this.tabControl.Location = new System.Drawing.Point(3, 3);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(486, 454);
+            this.tabControl.TabIndex = 0;
+            // 
+            // tabPagePic
+            // 
+            this.tabPagePic.Controls.Add(this.PictureBox1);
+            this.tabPagePic.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.tabPagePic.ForeColor = System.Drawing.Color.Red;
+            this.tabPagePic.Location = new System.Drawing.Point(4, 39);
+            this.tabPagePic.Name = "tabPagePic";
+            this.tabPagePic.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagePic.Size = new System.Drawing.Size(478, 411);
+            this.tabPagePic.TabIndex = 0;
+            this.tabPagePic.Text = "ピクチャー";
+            this.tabPagePic.UseVisualStyleBackColor = true;
+            // 
+            // tabPageWord
+            // 
+            this.tabPageWord.Controls.Add(this.TextBoxWord);
+            this.tabPageWord.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.tabPageWord.ForeColor = System.Drawing.Color.Black;
+            this.tabPageWord.Location = new System.Drawing.Point(4, 39);
+            this.tabPageWord.Name = "tabPageWord";
+            this.tabPageWord.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageWord.Size = new System.Drawing.Size(478, 411);
+            this.tabPageWord.TabIndex = 1;
+            this.tabPageWord.Text = "ワード";
+            this.tabPageWord.UseVisualStyleBackColor = true;
+            // 
+            // TextBoxWord
+            // 
+            this.TextBoxWord.Font = new System.Drawing.Font("ＭＳ ゴシック", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.TextBoxWord.Location = new System.Drawing.Point(97, 166);
+            this.TextBoxWord.Name = "TextBoxWord";
+            this.TextBoxWord.Size = new System.Drawing.Size(279, 71);
+            this.TextBoxWord.TabIndex = 0;
             // 
             // RdmPicGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightYellow;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(802, 461);
+            this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.LabelCharName);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.PictureBox2);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.panel1);
             this.Name = "RdmPicGame";
             this.Text = "ピクチャーゲーム";
             this.Load += new System.EventHandler(this.BtnTimer_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).EndInit();
-            this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -307,6 +358,11 @@ namespace MixPictureApp
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox2)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
+            this.tabPagePic.ResumeLayout(false);
+            this.tabPageWord.ResumeLayout(false);
+            this.tabPageWord.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -315,7 +371,6 @@ namespace MixPictureApp
         #endregion
         private System.Windows.Forms.PictureBox PictureBox1;
         private System.Windows.Forms.Button BtnOpenFile;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.FolderBrowserDialog DialogFolder;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Panel panel2;
@@ -332,6 +387,11 @@ namespace MixPictureApp
         private System.Windows.Forms.Label LabelTimer;
         private System.Windows.Forms.Label LabelCharName;
         private System.Windows.Forms.Button BtnSkip;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabPagePic;
+        private System.Windows.Forms.TabPage tabPageWord;
+        private System.Windows.Forms.TextBox TextBoxWord;
     }
 }
 

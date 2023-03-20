@@ -579,6 +579,7 @@ namespace MixPictureApp
                 LabelTimer.Visible = true;
                 textBox1.Visible = true;
                 LabelCharName.Visible = false;
+                PictureBox1.Image = null;
                 PictureBox2.Image= null;
                 LabelTimer.Text = "タイマー";
                 LabelPoint.Text = "ポイント";
@@ -617,6 +618,7 @@ namespace MixPictureApp
                 {
                     PictureBox2.Image.Dispose();
                 }
+                PictureBox1.Image = null;
                 return;
             }
             catch (Exception ex)
@@ -684,7 +686,6 @@ namespace MixPictureApp
             else
                 return true;
         }
-
     }
 }
 
