@@ -1,0 +1,92 @@
+・テキストランダムタブの作成について
+・外部設計
+０.ロードボタン制作
+  -ランダムワードか、ピクチャーワードかを判断する
+    ・abControlの選択フラグ Flag_Word,Flag_Picture
+  -画像もしくは、テキストファイルをよみこみ、配列に保存する
+  -難易度を読み込む
+  -ゲームルールによって、異なるボタンを表示させる
+-----------------------------分岐--------------------------------------
+１．ランダムピクチャーのスタートボタン　　１．ランダムワードのスタートボタン
+  -絵だけを表示パターン　　　　　　　　　　　  -言葉だけを表示
+
+・内部設計
+０.静的クラス Class Load作成 
+クラス内変数 private int GameType//ゲームルール
+             private int Level 
+
+コンストラクタ Load(int GameType,int Level,"キャラクター画像ファイルパスstring型")
+{
+    初期化設定
+    this.level = level
+    this.GameType = GameType
+    /////キャラ画像パスから配列作成するメソッド
+    
+    tmparr[] = Method() 
+    this.CharImgList = tmparr
+
+}
+
+
+//ゲッターとセッター// 
+
+public int GameType()
+{
+    get {return GameType; }//ゲッター https://qiita.com/No2DGameNoLife/items/2c42337d41db5d6b176d
+    set {GameType = value;}//セッター
+
+}
+
+
+public int Level()
+{
+ get {return Level;}
+ get {Level =value;}
+}
+
+public List<Image> CharImgList()
+{
+    get {return CharImgList; }//ゲッター
+    set {CharImgList = value;}//セッター
+
+}
+
+
+-----------------------------クラス継承-----------------------
+1.Load_Picture
+継承記述・・・・覚えてない
+Class Load_Picture 
+{
+private List<Image> CharaImgList //キャラ画像リスト型
+コンストラクタ
+    Load_Picture(""画像パス")
+        {
+            オーバーライド (gametypeとか)
+             //パスからランダム配列を作成するメソッド----SatoLibより使用してね。
+            this.List<Image> RdmImageList = tmp 
+        }
+    public List<string> CharImg() //ゲッターセッター
+        {
+            get {return List<Image> CharImgList;}
+            set {List<Image> CharImgList = value;}
+        }   
+
+
+2.Load_Word
+Class Load_Word
+{
+    private List<string> RdmWordList;
+
+    //コンストラクタ
+    public Load_Word("画像パス string")
+        {   
+            //^--------------パスからランダム配列を作成するメソッド記述---------
+            this.List<string> RdmWordList = tmp 
+        }
+
+    public List<string> CharImg() //ゲッターセッター
+        {
+            get {return List<Image> CharImgList;}
+            set {List<Image> CharImgList = value;}
+        }
+}
