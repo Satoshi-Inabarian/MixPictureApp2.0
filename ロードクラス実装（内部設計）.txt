@@ -1,92 +1,33 @@
 ・テキストランダムタブの作成について
 ・外部設計
 ０.ロードボタン制作
-  -ランダムワードか、ピクチャーワードかを判断する
-    ・abControlの選択フラグ Flag_Word,Flag_Picture
-  -画像もしくは、テキストファイルをよみこみ、配列に保存する
-  -難易度を読み込む
-  -ゲームルールによって、異なるボタンを表示させる
+  -ゲームタイプを読み込む (ラジオボタン）
+  -難易度を読み込む（ラジオボタン） 済
+  -キャラクター画像パスを読み込む　　済
+　-難易度別のキャラクター画像を読み込む　済
+  -派生クラスによって、データ（画像orテキスト）の読み込みを分岐させる　
+  -library.cs txtファイル拡張子をチェックするメソッド作成 済
+  -loadclass.cs load_word textファイルパスを元に、ファイルの中身の文字列を取得（リスト型) 済
+  -カウンター・ポインターセット
+　-例外処理
+    1.ピ：画像リストが５つ以上
+    2.ピ：画像拡張子 jpg.pngがどちらか一つ以上
+    3.ワ：txtファイルの存在有無　済
+    4.ワ：txtファイルのワードが５個以上
+    5.それ以外の予期せぬエラー
+
+    これが起きた場合は、return指示によってフォーム画面に戻るように設定する。
+
+
+1.スタートボタンの分岐（ゲームタイプによって、スタートボタンを分岐させる。）
+実質　Form1.cs　のL118~L145　のみでよい。
 -----------------------------分岐--------------------------------------
 １．ランダムピクチャーのスタートボタン　　１．ランダムワードのスタートボタン
-  -絵だけを表示パターン　　　　　　　　　　　  -言葉だけを表示
+  -絵だけを表示パターン　　　　　　　　　　　  -一つの単語をテキストボックスに表示
+  　　　　　　　　　　　　　　　　　　　　　　 　　↓次へボタン
+                                              -リストから一つ削除して表示する
 
-・内部設計
-０.静的クラス Class Load作成 
-クラス内変数 private int GameType//ゲームルール
-             private int Level 
-
-コンストラクタ Load(int GameType,int Level,"キャラクター画像ファイルパスstring型")
-{
-    初期化設定
-    this.level = level
-    this.GameType = GameType
-    /////キャラ画像パスから配列作成するメソッド
-    
-    tmparr[] = Method() 
-    this.CharImgList = tmparr
-
-}
-
-
-//ゲッターとセッター// 
-
-public int GameType()
-{
-    get {return GameType; }//ゲッター https://qiita.com/No2DGameNoLife/items/2c42337d41db5d6b176d
-    set {GameType = value;}//セッター
-
-}
-
-
-public int Level()
-{
- get {return Level;}
- get {Level =value;}
-}
-
-public List<Image> CharImgList()
-{
-    get {return CharImgList; }//ゲッター
-    set {CharImgList = value;}//セッター
-
-}
-
-
+・内部設計　～継承から～
 -----------------------------クラス継承-----------------------
-1.Load_Picture
-継承記述・・・・覚えてない
-Class Load_Picture 
-{
-private List<Image> CharaImgList //キャラ画像リスト型
-コンストラクタ
-    Load_Picture(""画像パス")
-        {
-            オーバーライド (gametypeとか)
-             //パスからランダム配列を作成するメソッド----SatoLibより使用してね。
-            this.List<Image> RdmImageList = tmp 
-        }
-    public List<string> CharImg() //ゲッターセッター
-        {
-            get {return List<Image> CharImgList;}
-            set {List<Image> CharImgList = value;}
-        }   
 
-
-2.Load_Word
-Class Load_Word
-{
-    private List<string> RdmWordList;
-
-    //コンストラクタ
-    public Load_Word("画像パス string")
-        {   
-            //^--------------パスからランダム配列を作成するメソッド記述---------
-            this.List<string> RdmWordList = tmp 
-        }
-
-    public List<string> CharImg() //ゲッターセッター
-        {
-            get {return List<Image> CharImgList;}
-            set {List<Image> CharImgList = value;}
-        }
-}
+リセット、フィニッシュ関数内にdisposeでメモリを解放する。
