@@ -23,9 +23,12 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 //自作ライブラリ
-using SatoLib;
+
 using System.Security.Cryptography.X509Certificates;
 using System.Runtime.InteropServices;
+using Class_Load;
+using SatoLib;
+using System.Runtime.Serialization.Formatters;
 
 namespace MixPictureApp
 {
@@ -53,6 +56,7 @@ namespace MixPictureApp
         private int Pt;//取得ポイント変数
         private int Mxp;//最大得点
         private List<Image> ImgList;//画像リスト
+        private List<string> WordList;//画像リスト
         private List<Image> CharaImgList;//キャラクターリスト
         private bool StartFlag = false;
         /// </summary>
@@ -378,6 +382,7 @@ namespace MixPictureApp
             catch (Exception)
             {
                 MessageBox.Show("キャラクター画像が読み込めませんでした。Image/Character/内の画像を確認してください。");
+                return;
                 
             }
 
@@ -425,7 +430,6 @@ namespace MixPictureApp
             catch (Exception e)
             {
                 Console.WriteLine($"error occurred:{e}");
-                return;
             }
         
     }
@@ -685,6 +689,53 @@ namespace MixPictureApp
                 return false;
             else
                 return true;
+        }
+
+        private int getGameType()
+        {
+            int gametype;
+            if (radioBtn_Picture.Checked)
+            {
+                gametype = 0;
+            }
+            else
+            {
+                gametype = 1;
+            }
+            return gametype;
+        }
+
+        private void Btn_Load_Click(object sender, EventArgs e)
+        {
+            //1.必要データをフォームから受け取る
+            int lvv =getLevel();
+            string folder_Path = textBox1.Text;
+            int gameType = getGameType();
+            //2.ロードクラス分岐
+            switch (gameType)
+            {
+                case 0:　//ピクチャー
+                    Load_Picture myLoad_pic = new Load_Picture(lvv, gameType, folder_Path);
+                    CharaImgList = myLoad_pic.getCharImgList();
+                    List<Image> bef_shufImgList = myLoad_pic.getImageList();
+                    ImgList = myLoad_pic.getShuffleImg_List(bef_shufImgList);
+                    Console.WriteLine("シャッフル画像リスト:{0}", ImgList.Count);
+                    break;
+                case 1: //ワード
+                    //　ファイル拡張子チェック
+                    List<string> FPath_List= library.getTextFPathList(folder_Path);
+                    if (FPath_List.Count == 0)
+                    {
+                        MessageBox.Show(".選択したフォルダにtxtファイルがありませんでした。");
+                        return;
+                    }
+                    Load_Word myLoad_word = new Load_Word(lvv, gameType, folder_Path);
+                    CharaImgList = myLoad_word.getCharImgList();
+                    List<string> bef_shufWordList = myLoad_word.getStrList(FPath_List);
+                    WordList = myLoad_word.getShuffleStr_List(bef_shufWordList);
+
+                    break;
+            }
         }
     }
 }
