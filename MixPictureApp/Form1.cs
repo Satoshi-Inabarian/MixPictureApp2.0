@@ -59,6 +59,7 @@ namespace MixPictureApp
         private List<string> WordList;//画像リスト
         private List<Image> CharaImgList;//キャラクターリスト
         private bool StartFlag = false;
+        private bool LoadFlag = false;
         /// </summary>
 
 
@@ -70,81 +71,6 @@ namespace MixPictureApp
             AllocConsole();
         }
 
-
-        private  void BtnStart_Click(object sender, EventArgs e)
-        {
-            StartFlag = true; //スタートボタンフラグON
-
-            //スタートボタンを押した後の処理
-            if (StartFlag == true)
-            {
-                try
-                {
-                    //フォルダダイアログより、画像取得
-                    string folderpath = textBox1.Text;
-                    ImgList = library.getImageList(folderpath);//画像リスト
-                    ImgList = library.shuffleImgList(ImgList);//それをシャッフル
-                                                              //画像がなかった場合
-
-                    if (ImgList.Count == 0)//例外処理
-                    {
-                        MessageBox.Show("画像を読み込むことができません。フォルダにjpg,png画像ファイルがあるか確認してください。");
-                        StartFlag = false;
-                        return;
-                    }
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine($"error occurred:{ex}");
-                    StartFlag = false;
-                    return;
-                }
-
-                //カウンター、ポインターセット
-                int lv = setCnt_Pt_Lv();
-                //最大得点計算
-                Mxp = setMaxPt();
-                //Console.WriteLine("【L106】TIMER_CNT:{0},POINT:{1}", TIMER_CNT, Pt);
-                //キャラクター画像セット
-                setChar(lv);
-                bool flag = is_CharImg(MXIMG_CNT);
-                if (!flag)
-                {
-                    MessageBox.Show($"画像は最大{MXIMG_CNT}つ以上用意してください", "エラー");
-                    return;
-                }
-                //ボタン・ラベル設定（表示/非表示）
-                setViewing(lv);
-                //最初の画像を表示させる。
-                try
-                {
-                    viewAndDel_Picidx(ImgList);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"error occurred:{ex}");
-                    StartFlag = false;
-                    return;
-                }
-
-                //タイマー起動
-                    //キャンセルトークンの取得(ctsがインスタンス)
-                    this.cts = new CancellationTokenSource();
-                    CancellationToken token = cts.Token;
-                try
-                {
-                    Task.Run(() => countTimer(TIMER_CNT,lv, token));//マルチ処理
-                    //戻り値ほしい場合 Task t1 = Task.Factory.StartNew(() => countTimer(TIMER_CNT, token));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"error occurred:{ex}");
-                    Reset(5, 0);
-                    return;
-                }
-                return;
-            }
-        }
 
 
         public void BtnOpenFile_Click(object sender, EventArgs e)
@@ -217,7 +143,7 @@ namespace MixPictureApp
                     CancellationToken token = this.cts.Token;
                     //6.最終フラグ確認
                     int idx_remain = ImgList.Count;
-                    bool flag = isLastPic(idx_remain);
+                    bool flag = isLastIdx(idx_remain);
                     if (flag)
                     {
                         BtnNextPicture.Text = "さいごだ！";
@@ -278,14 +204,7 @@ namespace MixPictureApp
 
         private void BtnReset_Click_1(object sender, EventArgs e)
         {
-            //例外処理
-            if (this.cts == null)
-            {
-                return;
-            }
-            cts.Cancel();
-            bool eflag = End(0);
-            Console.WriteLine("flag:{0}",eflag);
+            Reset(5,0);
         }
 
         /////////////////メソッド////////////////////
@@ -333,6 +252,21 @@ namespace MixPictureApp
             return ImgList.Count;
         }
 
+
+        public int viewAndDel_Wordidx(List<string> list)
+        {
+            TextBoxWord.Text = null; //
+            try
+            {
+                TextBoxWord.Text = list[0]; //テキスト表示
+                list.RemoveAt(0);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"error occured:{e}");
+            }
+            return WordList.Count;
+        }
         private int setCharStage(int pt,int mxp)
         {
             try
@@ -480,7 +414,16 @@ namespace MixPictureApp
         }
         private int setMaxPt()
         {
-            int c = ImgList.Count;
+            int c = 0;
+            int gtype = getGameType();
+            if (gtype == 0)
+            {
+                c = ImgList.Count;
+            }
+            else if (gtype == 1) 
+            {
+                c = WordList.Count;
+            }
             int cnt = TIMER_CNT;
             int mp = c * cnt;
             return mp;
@@ -529,7 +472,7 @@ namespace MixPictureApp
                 return true;
         }
 
-
+ 
         private void setViewing(int lv)
         {
             //難易度によるポイント・タイムの表示・非表示
@@ -544,24 +487,36 @@ namespace MixPictureApp
             }
             //ボタン・その他表示切り替え
             textBox1.Visible = false;
-            BtnStart.Visible = false;
-            BtnNextPicture.Visible = true;
+            BtnPicture.Visible = false;
+            BtnNextPicture.Visible = false;
+            BtnWord.Visible = false;
+            BtnNextWord.Visible = false;
             BtnOpenFile.Visible = false;
             BtnReset.Visible = true;
             BtnSkip.Visible = true;
             BtnNextPicture.Text = "せいかい";
-
-
             flowLayoutPanel1.Visible = false;//ラジオボタン非表示
-            //PictureBox2.Image = null;
+
+            int gtype = getGameType();
+            if (gtype == 0)
+            {
+                BtnNextPicture.Visible = true;
+            }
+            else if (gtype == 1)
+            {
+                BtnNextWord.Visible = true;
+            }
         }
         private async void Reset(int spoint,int stimer)
         {
             try
             {
-                //全てをリセット
-                await Task.Run(() => cts.Cancel());
-                await Task.Delay(1000);
+                //例外処理
+                if (this.cts != null)
+                {
+                    await Task.Run(() => cts.Cancel());
+                    await Task.Delay(1000);
+                }
                 //メモリ解放
                 if (PictureBox1.Image != null)
                 {
@@ -574,20 +529,25 @@ namespace MixPictureApp
 
                 initCNT_PT();//タイマー初期化
                 StartFlag = false; //スタートボタンフラグをオフにする
-                BtnStart.Visible = true;//スタートボタン再表示
+                //ボタン切り替え
                 BtnOpenFile.Visible = true;//フォルダ選択再表示
-                BtnNextPicture.Visible = false;//画像ボタン非表示
                 BtnReset.Visible = false;//リセットボタン非表示
                 BtnSkip.Visible = false;//スキップボタン非表示
+                BtnPicture.Visible = false;//ピクチャースタートボタン
+                BtnWord.Visible = false;//ワードスタートボタン
+                BtnLoad.Visible = true;//ロードスタートボタン
+                BtnNextPicture.Visible = false;//画像ネクストボタン非表示
+                BtnNextWord.Visible = false;//ワードネクストボタン非表示
                 flowLayoutPanel1.Visible = true;//ラジオボタン再表示
+                PanelGameType.Visible = true;//ゲームタイプパネル
                 LabelTimer.Visible = true;
                 textBox1.Visible = true;
                 LabelCharName.Visible = false;
                 PictureBox1.Image = null;
                 PictureBox2.Image= null;
+                TextBoxWord.Text = string.Empty;//ワード白紙へ
                 LabelTimer.Text = "タイマー";
                 LabelPoint.Text = "ポイント";
-                BtnStart.Text = "スタート";
                 BtnNextPicture.Text = "せいかい";
                 return;
             }
@@ -604,15 +564,20 @@ namespace MixPictureApp
                 //initCNT_PT();//カウンター、ポインター初期化
                 cts.Cancel();//キャンセルトークン
                 StartFlag = false; //スタートボタンフラグをオフにする
-                BtnStart.Visible = true;//スタートボタン再表示
+                BtnLoad.Visible = true;//ロードボタン再表示
                 LabelTimer.Visible = true;//ラベルタイマー再表示
                 flowLayoutPanel1.Visible = true;//ラジオボタン再表示
                 BtnOpenFile.Visible = true;//フォルダ選択再表示
                 BtnNextPicture.Visible = false;//画像ボタン非表示
+                BtnPicture.Visible = false;//画像ボタン非表示
+                BtnNextWord.Visible = false;//画像ボタン非表示
+                BtnWord.Visible = false;//画像ボタン非表示
                 BtnReset.Visible = false;//リセットボタン非表示
                 BtnSkip.Visible = false;//スキップボタン非表示
                 textBox1.Visible = true;//フォルダディレクトリ
+                PanelGameType.Visible = true;//ゲームタイプパネル
 
+                TextBoxWord.Text = string.Empty;//ワード白紙へ
                 //メモリ解放
                 if (PictureBox1.Image != null)
                 {
@@ -640,7 +605,6 @@ namespace MixPictureApp
                 {
                     case 0://reset
                         Reset(5, 0);
-                        Console.WriteLine("reset has been done");
                         return true;
                     case 1://finish
                         Finish();
@@ -683,13 +647,14 @@ namespace MixPictureApp
             Microsoft.SmallBasic.Library.Sound.Play(path);
         }
 
-        private bool isLastPic(int idx)
+        private bool isLastIdx(int idx)
         {
             if (idx > 1)
                 return false;
             else
                 return true;
         }
+
 
         private int getGameType()
         {
@@ -705,36 +670,249 @@ namespace MixPictureApp
             return gametype;
         }
 
-        private void Btn_Load_Click(object sender, EventArgs e)
+        private void PresetView()
         {
-            //1.必要データをフォームから受け取る
-            int lvv =getLevel();
-            string folder_Path = textBox1.Text;
-            int gameType = getGameType();
-            //2.ロードクラス分岐
-            switch (gameType)
+            BtnReset.Visible = true;
+            BtnLoad.Visible = false;
+            flowLayoutPanel1.Visible = false;
+            PanelGameType.Visible = false;
+            textBox1.Visible = false;
+            BtnOpenFile.Visible = false;
+        }
+        private void BtnLoad_Click(object sender, EventArgs e)
+        {
+            try
             {
-                case 0:　//ピクチャー
-                    Load_Picture myLoad_pic = new Load_Picture(lvv, gameType, folder_Path);
-                    CharaImgList = myLoad_pic.getCharImgList();
-                    List<Image> bef_shufImgList = myLoad_pic.getImageList();
-                    ImgList = myLoad_pic.getShuffleImg_List(bef_shufImgList);
-                    Console.WriteLine("シャッフル画像リスト:{0}", ImgList.Count);
-                    break;
-                case 1: //ワード
-                    //　ファイル拡張子チェック
-                    List<string> FPath_List= library.getTextFPathList(folder_Path);
-                    if (FPath_List.Count == 0)
-                    {
-                        MessageBox.Show(".選択したフォルダにtxtファイルがありませんでした。");
-                        return;
-                    }
-                    Load_Word myLoad_word = new Load_Word(lvv, gameType, folder_Path);
-                    CharaImgList = myLoad_word.getCharImgList();
-                    List<string> bef_shufWordList = myLoad_word.getStrList(FPath_List);
-                    WordList = myLoad_word.getShuffleStr_List(bef_shufWordList);
+                //1.必要データをフォームから受け取る
+                int lv = getLevel();
+                string folder_Path = textBox1.Text;
+                int gameType = getGameType();
+                //2.ゲームタイプによるデータローディングの分岐
+                switch (gameType)
+                {
+                    case 0: //★ピクチャー　データ読み込み
+                        Load_Picture myLoad_pic = new Load_Picture(lv, gameType, folder_Path);
+                        CharaImgList = myLoad_pic.getCharImgList();
+                        List<Image> bef_shufImgList = myLoad_pic.getImageList();
+                        ImgList = myLoad_pic.getShuffleImg_List(bef_shufImgList);
+                        Console.WriteLine("シャッフル画像リスト:{0}", ImgList.Count);
+                        //データチェック 十分な画像があるか
+                        if (!myLoad_pic.has_EnoughImgData(ImgList))
+                        {
+                            MessageBox.Show("画像は最低５つ以上設定してください。");
+                            return;
+                        }
+                        break;
+                    case 1: //★ワード
+                            //　txtファイル存在のチェック
+                        List<string> FPath_List = library.getTextFPathList(folder_Path);
+                        if (FPath_List.Count == 0)
+                        {
+                            MessageBox.Show(".選択したフォルダにtxtファイルがありませんでした。");
+                            return;
+                        }
+                        // データ読み込み
+                        Load_Word myLoad_word = new Load_Word(lv, gameType, folder_Path);
+                        CharaImgList = myLoad_word.getCharImgList();
+                        List<string> bef_shufWordList = myLoad_word.getStrList(FPath_List);
+                        WordList = myLoad_word.getShuffleStr_List(bef_shufWordList);
+                        //データチェック　ワード数が十分にあるか
+                        if (!myLoad_word.has_EnoughWords(WordList))
+                        {
+                            MessageBox.Show("ワードは最低５つ以上設定してください。");
+                            return;
+                        }
 
-                    break;
+                        break;
+                }
+                //3.スタート前の準備設定
+                setCnt_Pt_Lv(); //カウンター、ポインターセット
+                LoadFlag = true; //フラグセット
+                Mxp = setMaxPt();//最高得点のセット
+                //4.ボタンの表示
+                if (LoadFlag = true && gameType == 0)
+                {
+                    BtnPicture.Visible = true;
+                }
+                else if (LoadFlag = true && gameType == 1)
+                {
+                    BtnWord.Visible = true;
+                }
+                else
+                {
+                    MessageBox.Show("ロードが正しく行われていません。再起動を検討してください。");
+                    return;
+                }
+
+                PresetView();
+
+                return;
+
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("error occurred:{0}", ex);
+                return;
+            }
+        }
+
+        private void BtnPicture_Click(object sender, EventArgs e)
+        {
+
+            StartFlag = true; //スタートボタンフラグON
+
+            //スタートボタンを押した後の処理
+            if (StartFlag == true)
+            {
+                //直前初期設定
+                int lv = getLevel();
+                setViewing(lv);
+                setChar(lv);
+                ;
+                //最初の画像を表示させる。
+                try
+                {
+                    viewAndDel_Picidx(ImgList);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"error occurred:{ex}");
+                    StartFlag = false;
+                    return;
+                }
+
+                //タイマー起動
+                //キャンセルトークンの取得(ctsがインスタンス)
+                this.cts = new CancellationTokenSource();
+                CancellationToken token = cts.Token;
+                try
+                {
+                    Task.Run(() => countTimer(TIMER_CNT, lv, token));//マルチ処理
+                    //戻り値ほしい場合 Task t1 = Task.Factory.StartNew(() => countTimer(TIMER_CNT, token));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"error occurred:{ex}");
+                    Reset(5, 0);
+                    return;
+                }
+                return;
+            }
+        }
+
+        private void BtnWord_Click(object sender, EventArgs e)
+        {
+
+            StartFlag = true; //スタートボタンフラグON
+
+            //スタートボタンを押した後の処理
+            if (StartFlag == true)
+            {
+                //直前初期設定
+                int lv = getLevel();
+                setViewing(lv);
+                setChar(lv);
+                ;
+                //最初のワードを表示させる。
+                try
+                {
+                    viewAndDel_Wordidx(WordList);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"error occurred:{ex}");
+                    StartFlag = false;
+                    return;
+                }
+
+                //タイマー起動
+                //キャンセルトークンの取得(ctsがインスタンス)
+                this.cts = new CancellationTokenSource();
+                CancellationToken token = cts.Token;
+                try
+                {
+                    Task.Run(() => countTimer(TIMER_CNT, lv, token));//マルチ処理
+                    //戻り値ほしい場合 Task t1 = Task.Factory.StartNew(() => countTimer(TIMER_CNT, token));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"error occurred:{ex}");
+                    Reset(5, 0);
+                    return;
+                }
+                return;
+            }
+        }
+
+        private async void BtnNextWord_Click(object sender, EventArgs e)
+        {
+            //例外処理
+            if (this.cts == null)
+            {
+                return;
+            }
+
+            //本ソース
+
+            //1.タイマー停止
+            try
+            {
+                cts.Cancel();
+                //2.正解時効果音の再生
+                PlayShuffleSound(SOUNDPATH);
+                //3.得点計算処理
+                string pt_str = LabelPoint.Text;
+                string tim_str = LabelTimer.Text;
+                int pt_int = Convert.ToInt32(pt_str);
+                int tim_int = Convert.ToInt32(tim_str);
+                Pt = pt_int + tim_int;
+                LabelPoint.Text = Convert.ToString(Pt);
+                //4.キャラクター画像更新
+                updateChar();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error occured{ex}");
+                Reset(5, 0);
+            }
+
+            //5.ワードの表示分岐へ
+            //残りのワードがない場合
+            try
+            {
+                if (WordList.Count < 1)
+                {
+                    PlayShuffleSound(SOUND_FINPATH);
+                    await Task.Run(() => End(1));
+                    Thread.Sleep(3000);
+                    return;
+                }
+                else
+                {
+                    //5タイマーキャンセルトークンの再発行
+                    this.cts = new CancellationTokenSource();
+                    CancellationToken token = this.cts.Token;
+                    //6.最終フラグ確認
+                    int idx_remain = WordList.Count;
+                    bool flag = isLastIdx(idx_remain);
+                    if (flag)
+                    {
+                        BtnNextWord.Text = "さいごだ！";
+                    }
+                    //7.ワードの表示
+                    TextBoxWord.Text = null; //白紙に戻す
+                    viewAndDel_Wordidx(WordList);
+                    //8.タイマー再起動
+                    LabelTimer.Text = TIMER_CNT.ToString();
+                    int lv = getLevel();
+                    await Task.Delay(500);//タイマー起動を遅らせる
+                    await Task.Run(() => countTimer(TIMER_CNT, lv, token));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"error occurred{ex}");
             }
         }
     }
