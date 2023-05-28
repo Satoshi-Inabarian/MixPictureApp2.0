@@ -38,7 +38,6 @@ namespace MixPictureApp
             this.BtnSkip = new System.Windows.Forms.Button();
             this.BtnReset = new System.Windows.Forms.Button();
             this.BtnNextPicture = new System.Windows.Forms.Button();
-            this.BtnStart = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.LabelPoint = new System.Windows.Forms.Label();
             this.LabelTimer = new System.Windows.Forms.Label();
@@ -51,12 +50,15 @@ namespace MixPictureApp
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPagePic = new System.Windows.Forms.TabPage();
-            this.Btn_Load = new System.Windows.Forms.Button();
+            this.BtnLoad = new System.Windows.Forms.Button();
             this.tabPageWord = new System.Windows.Forms.TabPage();
             this.TextBoxWord = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.PanelGameType = new System.Windows.Forms.Panel();
             this.radioBtn_Word = new System.Windows.Forms.RadioButton();
             this.radioBtn_Picture = new System.Windows.Forms.RadioButton();
+            this.BtnPicture = new System.Windows.Forms.Button();
+            this.BtnWord = new System.Windows.Forms.Button();
+            this.BtnNextWord = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -66,7 +68,7 @@ namespace MixPictureApp
             this.tabControl.SuspendLayout();
             this.tabPagePic.SuspendLayout();
             this.tabPageWord.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.PanelGameType.SuspendLayout();
             this.SuspendLayout();
             // 
             // PictureBox1
@@ -75,9 +77,9 @@ namespace MixPictureApp
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PictureBox1.BackColor = System.Drawing.Color.Linen;
-            this.PictureBox1.Location = new System.Drawing.Point(0, 3);
+            this.PictureBox1.Location = new System.Drawing.Point(3, 0);
             this.PictureBox1.Name = "PictureBox1";
-            this.PictureBox1.Size = new System.Drawing.Size(472, 408);
+            this.PictureBox1.Size = new System.Drawing.Size(473, 408);
             this.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBox1.TabIndex = 0;
             this.PictureBox1.TabStop = false;
@@ -89,7 +91,7 @@ namespace MixPictureApp
             this.BtnOpenFile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BtnOpenFile.BackColor = System.Drawing.Color.OldLace;
             this.BtnOpenFile.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnOpenFile.Location = new System.Drawing.Point(229, 79);
+            this.BtnOpenFile.Location = new System.Drawing.Point(226, 121);
             this.BtnOpenFile.Name = "BtnOpenFile";
             this.BtnOpenFile.Size = new System.Drawing.Size(90, 25);
             this.BtnOpenFile.TabIndex = 2;
@@ -101,11 +103,11 @@ namespace MixPictureApp
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox1.Location = new System.Drawing.Point(5, 40);
+            this.textBox1.Location = new System.Drawing.Point(9, 58);
             this.textBox1.MaxLength = 5;
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(307, 40);
+            this.textBox1.Size = new System.Drawing.Size(307, 50);
             this.textBox1.TabIndex = 3;
             this.textBox1.Text = "D:\\\\Program\\\\C#\\\\Image2";
             // 
@@ -113,24 +115,28 @@ namespace MixPictureApp
             // 
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoSize = true;
+            this.panel2.Controls.Add(this.BtnNextWord);
+            this.panel2.Controls.Add(this.PanelGameType);
+            this.panel2.Controls.Add(this.BtnPicture);
+            this.panel2.Controls.Add(this.BtnLoad);
+            this.panel2.Controls.Add(this.BtnWord);
             this.panel2.Controls.Add(this.BtnSkip);
             this.panel2.Controls.Add(this.BtnReset);
             this.panel2.Controls.Add(this.BtnNextPicture);
-            this.panel2.Controls.Add(this.BtnStart);
             this.panel2.Controls.Add(this.textBox1);
             this.panel2.Controls.Add(this.BtnOpenFile);
-            this.panel2.Location = new System.Drawing.Point(486, 236);
+            this.panel2.Location = new System.Drawing.Point(499, 225);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(319, 222);
+            this.panel2.Size = new System.Drawing.Size(322, 227);
             this.panel2.TabIndex = 6;
             // 
             // BtnSkip
             // 
             this.BtnSkip.BackColor = System.Drawing.Color.Yellow;
             this.BtnSkip.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnSkip.Location = new System.Drawing.Point(122, 103);
+            this.BtnSkip.Location = new System.Drawing.Point(99, 114);
             this.BtnSkip.Name = "BtnSkip";
-            this.BtnSkip.Size = new System.Drawing.Size(143, 39);
+            this.BtnSkip.Size = new System.Drawing.Size(117, 31);
             this.BtnSkip.TabIndex = 9;
             this.BtnSkip.Text = "スキップ";
             this.BtnSkip.UseVisualStyleBackColor = false;
@@ -142,9 +148,9 @@ namespace MixPictureApp
             this.BtnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.BtnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnReset.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnReset.Location = new System.Drawing.Point(6, 105);
+            this.BtnReset.Location = new System.Drawing.Point(8, 115);
             this.BtnReset.Name = "BtnReset";
-            this.BtnReset.Size = new System.Drawing.Size(100, 38);
+            this.BtnReset.Size = new System.Drawing.Size(85, 31);
             this.BtnReset.TabIndex = 10;
             this.BtnReset.Text = "リセット";
             this.BtnReset.UseVisualStyleBackColor = false;
@@ -156,7 +162,7 @@ namespace MixPictureApp
             this.BtnNextPicture.BackColor = System.Drawing.Color.Coral;
             this.BtnNextPicture.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnNextPicture.Font = new System.Drawing.Font("MS UI Gothic", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnNextPicture.Location = new System.Drawing.Point(16, 147);
+            this.BtnNextPicture.Location = new System.Drawing.Point(134, 156);
             this.BtnNextPicture.Name = "BtnNextPicture";
             this.BtnNextPicture.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.BtnNextPicture.Size = new System.Drawing.Size(182, 68);
@@ -166,19 +172,6 @@ namespace MixPictureApp
             this.BtnNextPicture.Visible = false;
             this.BtnNextPicture.Click += new System.EventHandler(this.BtnNextPicture_Click);
             // 
-            // BtnStart
-            // 
-            this.BtnStart.BackColor = System.Drawing.Color.Gold;
-            this.BtnStart.Font = new System.Drawing.Font("MS UI Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnStart.ForeColor = System.Drawing.Color.Black;
-            this.BtnStart.Location = new System.Drawing.Point(173, 164);
-            this.BtnStart.Name = "BtnStart";
-            this.BtnStart.Size = new System.Drawing.Size(143, 55);
-            this.BtnStart.TabIndex = 7;
-            this.BtnStart.Text = "スタート";
-            this.BtnStart.UseVisualStyleBackColor = false;
-            this.BtnStart.Click += new System.EventHandler(this.BtnStart_Click);
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -187,7 +180,7 @@ namespace MixPictureApp
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Controls.Add(this.LabelPoint, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.LabelTimer, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(608, 3);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(624, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.67196F));
@@ -221,7 +214,7 @@ namespace MixPictureApp
             // PictureBox2
             // 
             this.PictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PictureBox2.Location = new System.Drawing.Point(495, 1);
+            this.PictureBox2.Location = new System.Drawing.Point(511, 1);
             this.PictureBox2.Name = "PictureBox2";
             this.PictureBox2.Size = new System.Drawing.Size(100, 150);
             this.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -234,7 +227,7 @@ namespace MixPictureApp
             this.flowLayoutPanel1.Controls.Add(this.radioBtn_Easy);
             this.flowLayoutPanel1.Controls.Add(this.radioBtn_Normal);
             this.flowLayoutPanel1.Controls.Add(this.radioBtn_High);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(522, 206);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(538, 200);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(283, 27);
             this.flowLayoutPanel1.TabIndex = 0;
@@ -279,7 +272,7 @@ namespace MixPictureApp
             this.LabelCharName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LabelCharName.AutoSize = true;
             this.LabelCharName.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LabelCharName.Location = new System.Drawing.Point(499, 176);
+            this.LabelCharName.Location = new System.Drawing.Point(515, 176);
             this.LabelCharName.Name = "LabelCharName";
             this.LabelCharName.Size = new System.Drawing.Size(103, 16);
             this.LabelCharName.TabIndex = 8;
@@ -308,7 +301,6 @@ namespace MixPictureApp
             // 
             // tabPagePic
             // 
-            this.tabPagePic.Controls.Add(this.Btn_Load);
             this.tabPagePic.Controls.Add(this.PictureBox1);
             this.tabPagePic.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.tabPagePic.ForeColor = System.Drawing.Color.Red;
@@ -320,18 +312,18 @@ namespace MixPictureApp
             this.tabPagePic.Text = "ピクチャー";
             this.tabPagePic.UseVisualStyleBackColor = true;
             // 
-            // Btn_Load
+            // BtnLoad
             // 
-            this.Btn_Load.BackColor = System.Drawing.Color.Moccasin;
-            this.Btn_Load.Font = new System.Drawing.Font("ＭＳ ゴシック", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.Btn_Load.ForeColor = System.Drawing.Color.Black;
-            this.Btn_Load.Location = new System.Drawing.Point(285, 303);
-            this.Btn_Load.Name = "Btn_Load";
-            this.Btn_Load.Size = new System.Drawing.Size(166, 69);
-            this.Btn_Load.TabIndex = 1;
-            this.Btn_Load.Text = "ロード";
-            this.Btn_Load.UseVisualStyleBackColor = false;
-            this.Btn_Load.Click += new System.EventHandler(this.Btn_Load_Click);
+            this.BtnLoad.BackColor = System.Drawing.Color.Moccasin;
+            this.BtnLoad.Font = new System.Drawing.Font("ＭＳ ゴシック", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnLoad.ForeColor = System.Drawing.Color.Black;
+            this.BtnLoad.Location = new System.Drawing.Point(62, 156);
+            this.BtnLoad.Name = "BtnLoad";
+            this.BtnLoad.Size = new System.Drawing.Size(220, 62);
+            this.BtnLoad.TabIndex = 1;
+            this.BtnLoad.Text = "よーい！";
+            this.BtnLoad.UseVisualStyleBackColor = false;
+            this.BtnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
             // 
             // tabPageWord
             // 
@@ -354,15 +346,15 @@ namespace MixPictureApp
             this.TextBoxWord.Size = new System.Drawing.Size(279, 71);
             this.TextBoxWord.TabIndex = 0;
             // 
-            // panel1
+            // PanelGameType
             // 
-            this.panel1.BackColor = System.Drawing.Color.Goldenrod;
-            this.panel1.Controls.Add(this.radioBtn_Word);
-            this.panel1.Controls.Add(this.radioBtn_Picture);
-            this.panel1.Location = new System.Drawing.Point(555, 238);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(243, 31);
-            this.panel1.TabIndex = 11;
+            this.PanelGameType.BackColor = System.Drawing.Color.Goldenrod;
+            this.PanelGameType.Controls.Add(this.radioBtn_Word);
+            this.PanelGameType.Controls.Add(this.radioBtn_Picture);
+            this.PanelGameType.Location = new System.Drawing.Point(73, 21);
+            this.PanelGameType.Name = "PanelGameType";
+            this.PanelGameType.Size = new System.Drawing.Size(243, 31);
+            this.PanelGameType.TabIndex = 11;
             // 
             // radioBtn_Word
             // 
@@ -383,7 +375,7 @@ namespace MixPictureApp
             this.radioBtn_Picture.Checked = true;
             this.radioBtn_Picture.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.radioBtn_Picture.ForeColor = System.Drawing.Color.Black;
-            this.radioBtn_Picture.Location = new System.Drawing.Point(7, 7);
+            this.radioBtn_Picture.Location = new System.Drawing.Point(6, 6);
             this.radioBtn_Picture.Name = "radioBtn_Picture";
             this.radioBtn_Picture.Size = new System.Drawing.Size(124, 20);
             this.radioBtn_Picture.TabIndex = 0;
@@ -391,13 +383,55 @@ namespace MixPictureApp
             this.radioBtn_Picture.Text = "ピクチャーゲーム";
             this.radioBtn_Picture.UseVisualStyleBackColor = true;
             // 
+            // BtnPicture
+            // 
+            this.BtnPicture.BackColor = System.Drawing.Color.Gold;
+            this.BtnPicture.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnPicture.ForeColor = System.Drawing.Color.Black;
+            this.BtnPicture.Location = new System.Drawing.Point(19, 165);
+            this.BtnPicture.Name = "BtnPicture";
+            this.BtnPicture.Size = new System.Drawing.Size(251, 55);
+            this.BtnPicture.TabIndex = 12;
+            this.BtnPicture.Text = "スタート！";
+            this.BtnPicture.UseVisualStyleBackColor = false;
+            this.BtnPicture.Visible = false;
+            this.BtnPicture.Click += new System.EventHandler(this.BtnPicture_Click);
+            // 
+            // BtnWord
+            // 
+            this.BtnWord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.BtnWord.Font = new System.Drawing.Font("MS UI Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnWord.ForeColor = System.Drawing.Color.Black;
+            this.BtnWord.Location = new System.Drawing.Point(39, 163);
+            this.BtnWord.Name = "BtnWord";
+            this.BtnWord.Size = new System.Drawing.Size(264, 55);
+            this.BtnWord.TabIndex = 13;
+            this.BtnWord.Text = "スタート";
+            this.BtnWord.UseVisualStyleBackColor = false;
+            this.BtnWord.Visible = false;
+            this.BtnWord.Click += new System.EventHandler(this.BtnWord_Click);
+            // 
+            // BtnNextWord
+            // 
+            this.BtnNextWord.BackColor = System.Drawing.Color.Coral;
+            this.BtnNextWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnNextWord.Font = new System.Drawing.Font("MS UI Gothic", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnNextWord.Location = new System.Drawing.Point(134, 156);
+            this.BtnNextWord.Name = "BtnNextWord";
+            this.BtnNextWord.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+            this.BtnNextWord.Size = new System.Drawing.Size(182, 68);
+            this.BtnNextWord.TabIndex = 10;
+            this.BtnNextWord.Text = "せいかい";
+            this.BtnNextWord.UseVisualStyleBackColor = false;
+            this.BtnNextWord.Visible = false;
+            this.BtnNextWord.Click += new System.EventHandler(this.BtnNextWord_Click);
+            // 
             // RdmPicGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightYellow;
-            this.ClientSize = new System.Drawing.Size(802, 461);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(818, 455);
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.LabelCharName);
             this.Controls.Add(this.flowLayoutPanel1);
@@ -420,8 +454,8 @@ namespace MixPictureApp
             this.tabPagePic.ResumeLayout(false);
             this.tabPageWord.ResumeLayout(false);
             this.tabPageWord.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.PanelGameType.ResumeLayout(false);
+            this.PanelGameType.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -433,7 +467,6 @@ namespace MixPictureApp
         private System.Windows.Forms.FolderBrowserDialog DialogFolder;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button BtnStart;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button BtnNextPicture;
         private System.Windows.Forms.Button BtnReset;
@@ -451,10 +484,13 @@ namespace MixPictureApp
         private System.Windows.Forms.TabPage tabPagePic;
         private System.Windows.Forms.TabPage tabPageWord;
         private System.Windows.Forms.TextBox TextBoxWord;
-        private System.Windows.Forms.Button Btn_Load;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button BtnLoad;
+        private System.Windows.Forms.Panel PanelGameType;
         private System.Windows.Forms.RadioButton radioBtn_Word;
         private System.Windows.Forms.RadioButton radioBtn_Picture;
+        private System.Windows.Forms.Button BtnPicture;
+        private System.Windows.Forms.Button BtnWord;
+        private System.Windows.Forms.Button BtnNextWord;
     }
 }
 
