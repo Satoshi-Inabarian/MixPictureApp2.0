@@ -145,10 +145,11 @@ namespace MixPictureApp
                     CancellationToken token = this.cts.Token;
                     //6.最終フラグ確認
                     int idx_remain = ImgList.Count;
-                    bool flag = isLastIdx(idx_remain);
+                    bool flag = isThisLastTask(gameType);
                     if (flag)
                     {
                         BtnNextPicture.Text = "さいごだ！";
+                        BtnNextWord.Text = "さいごだ！";
                     }
                     //7.絵の表示
                     viewandDel_idx(ImgList,WordList,gameType);
@@ -174,15 +175,22 @@ namespace MixPictureApp
                 //タイマーキャンセル
                 cts.Cancel();
                 //最後のタスクかどうか。
-                if(isThisLastTask(gameType))
+                if(hasNoMoreTask(gameType))
                 {
                     PlayShuffleSound(SOUND_FINPATH);
                     await Task.Run(() => End(1));
                     Thread.Sleep(3000);
                     return;
                 }
-                //画像表示
+                //タスク表示
                 viewandDel_idx(ImgList,WordList,gameType);
+                //最後のタスクかどうか
+                bool flag = isThisLastTask(gameType);
+                if (flag)
+                {
+                    BtnNextPicture.Text = "さいごだ！";
+                    BtnNextWord.Text = "さいごだ！";
+                }
                 //キャンセルトークンの再発行
                 this.cts = new CancellationTokenSource();
                 CancellationToken token = this.cts.Token;
@@ -491,6 +499,7 @@ namespace MixPictureApp
             BtnReset.Visible = true;
             BtnSkip.Visible = true;
             BtnNextPicture.Text = "せいかい";
+            BtnNextWord.Text = "せいかい";
             flowLayoutPanel1.Visible = false;//ラジオボタン非表示
 
             if (gameType == 0)
@@ -573,6 +582,7 @@ namespace MixPictureApp
                 PanelGameType.Visible = true;//ゲームタイプパネル
 
                 TextBoxWord.Text = string.Empty;//ワード白紙へ
+                BtnNextPicture.Text = "せいかい";
                 //メモリ解放
                 if (PictureBox1.Image != null)
                 {
@@ -642,12 +652,24 @@ namespace MixPictureApp
             Microsoft.SmallBasic.Library.Sound.Play(path);
         }
 
-        private bool isLastIdx(int idx)
+        private bool isThisLastTask(int gametype)
         {
-            if (idx > 1)
-                return false;
-            else
-                return true;
+            switch (gameType)
+            {
+                case 0://ピクチャー
+                    if (ImgList.Count > 0)
+                        return false;
+                    else
+                        return true;
+
+                case 1://ワード
+                    if (WordList.Count > 0)
+                        return false;
+                    else
+                        return true;
+                default:
+                    return false;
+            }
         }
 
 
@@ -690,7 +712,6 @@ namespace MixPictureApp
                         CharaImgList = myLoad_pic.getCharImgList();
                         List<Image> bef_shufImgList = myLoad_pic.getImageList();
                         ImgList = myLoad_pic.getShuffleImg_List(bef_shufImgList);
-                        Console.WriteLine("シャッフル画像リスト:{0}", ImgList.Count);
                         //データチェック 十分な画像があるか
                         if (!myLoad_pic.has_EnoughImgData(ImgList))
                         {
@@ -881,6 +902,7 @@ namespace MixPictureApp
                     PlayShuffleSound(SOUND_FINPATH);
                     await Task.Run(() => End(1));
                     Thread.Sleep(3000);
+ 
                     return;
                 }
                 else
@@ -890,10 +912,11 @@ namespace MixPictureApp
                     CancellationToken token = this.cts.Token;
                     //6.最終フラグ確認
                     int idx_remain = WordList.Count;
-                    bool flag = isLastIdx(idx_remain);
+                    bool flag = isThisLastTask(gameType);
                     if (flag)
                     {
                         BtnNextWord.Text = "さいごだ！";
+                        BtnNextPicture.Text = "さいごだ！";
                     }
                     //7.ワードの表示
                     TextBoxWord.Text = null; //白紙に戻す
@@ -911,7 +934,7 @@ namespace MixPictureApp
             }
         }
 
-        private bool isThisLastTask(int gametype)
+        private bool hasNoMoreTask(int gametype)
         {
             switch (gametype)
             {
