@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using Class_Load;
 using SatoLib;
 using System.Runtime.Serialization.Formatters;
+using System.Linq.Expressions;
 
 namespace MixPictureApp
 {
@@ -55,6 +56,7 @@ namespace MixPictureApp
         private int time_remain;//残り秒数表示の変数
         private int Pt;//取得ポイント変数
         private int Mxp;//最大得点
+        private int gameType; //ゲームルール
         private List<Image> ImgList;//画像リスト
         private List<string> WordList;//画像リスト
         private List<Image> CharaImgList;//キャラクターリスト
@@ -149,7 +151,7 @@ namespace MixPictureApp
                         BtnNextPicture.Text = "さいごだ！";
                     }
                     //7.絵の表示
-                    viewAndDel_Picidx(ImgList);
+                    viewandDel_idx(ImgList,WordList,gameType);
                     //8.タイマー再起動
                     LabelTimer.Text = TIMER_CNT.ToString();
                     int lv = getLevel();
@@ -171,8 +173,8 @@ namespace MixPictureApp
             {
                 //タイマーキャンセル
                 cts.Cancel();
-                //最後の画像であるかチェック
-                if (ImgList.Count == 0) 
+                //最後のタスクかどうか。
+                if(isThisLastTask(gameType))
                 {
                     PlayShuffleSound(SOUND_FINPATH);
                     await Task.Run(() => End(1));
@@ -180,7 +182,7 @@ namespace MixPictureApp
                     return;
                 }
                 //画像表示
-                viewAndDel_Picidx(ImgList);
+                viewandDel_idx(ImgList,WordList,gameType);
                 //キャンセルトークンの再発行
                 this.cts = new CancellationTokenSource();
                 CancellationToken token = this.cts.Token;
@@ -236,36 +238,31 @@ namespace MixPictureApp
         }
 
         //画像表示
-        public int viewAndDel_Picidx(List<Image> list)
-            {
-            PictureBox1.Image = null;//リセット
-            try
-            {
-                PictureBox1.Image = list[0];//絵を表示
-
-                list.RemoveAt(0);        //表示した絵を削除
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"error occured:{e}");
-            }
-            return ImgList.Count;
-        }
 
 
-        public int viewAndDel_Wordidx(List<string> list)
+        public int viewandDel_idx(List<Image> plist, List<string> wlist, int gametype)
         {
-            TextBoxWord.Text = null; //
             try
             {
-                TextBoxWord.Text = list[0]; //テキスト表示
-                list.RemoveAt(0);
+                switch (gametype)
+                {
+                    case 0://ピクチャー
+                        PictureBox1.Image = plist[0];//絵を表示
+                        plist.RemoveAt(0);        //表示した絵を削除
+                        return ImgList.Count;
+
+                    case 1://ワード
+                        TextBoxWord.Text = null; //白紙に戻す
+                        TextBoxWord.Text = wlist[0];
+                        wlist.RemoveAt(0);
+                        return WordList.Count;
+                }
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine($"error occured:{e}");
+                Console.WriteLine(ex.ToString());
             }
-            return WordList.Count;
+            return 0;
         }
         private int setCharStage(int pt,int mxp)
         {
@@ -415,12 +412,11 @@ namespace MixPictureApp
         private int setMaxPt()
         {
             int c = 0;
-            int gtype = getGameType();
-            if (gtype == 0)
+            if (gameType == 0)
             {
                 c = ImgList.Count;
             }
-            else if (gtype == 1) 
+            else if (gameType == 1) 
             {
                 c = WordList.Count;
             }
@@ -497,12 +493,11 @@ namespace MixPictureApp
             BtnNextPicture.Text = "せいかい";
             flowLayoutPanel1.Visible = false;//ラジオボタン非表示
 
-            int gtype = getGameType();
-            if (gtype == 0)
+            if (gameType == 0)
             {
                 BtnNextPicture.Visible = true;
             }
-            else if (gtype == 1)
+            else if (gameType == 1)
             {
                 BtnNextWord.Visible = true;
             }
@@ -686,7 +681,7 @@ namespace MixPictureApp
                 //1.必要データをフォームから受け取る
                 int lv = getLevel();
                 string folder_Path = textBox1.Text;
-                int gameType = getGameType();
+                gameType = getGameType();
                 //2.ゲームタイプによるデータローディングの分岐
                 switch (gameType)
                 {
@@ -773,7 +768,7 @@ namespace MixPictureApp
                 //最初の画像を表示させる。
                 try
                 {
-                    viewAndDel_Picidx(ImgList);
+                    viewandDel_idx(ImgList,WordList,gameType);
                 }
                 catch (Exception ex)
                 {
@@ -817,7 +812,7 @@ namespace MixPictureApp
                 //最初のワードを表示させる。
                 try
                 {
-                    viewAndDel_Wordidx(WordList);
+                    viewandDel_idx(ImgList,WordList,gameType);
                 }
                 catch (Exception ex)
                 {
@@ -902,7 +897,7 @@ namespace MixPictureApp
                     }
                     //7.ワードの表示
                     TextBoxWord.Text = null; //白紙に戻す
-                    viewAndDel_Wordidx(WordList);
+                    viewandDel_idx(ImgList, WordList, gameType);
                     //8.タイマー再起動
                     LabelTimer.Text = TIMER_CNT.ToString();
                     int lv = getLevel();
@@ -913,6 +908,24 @@ namespace MixPictureApp
             catch (Exception ex)
             {
                 Console.WriteLine($"error occurred{ex}");
+            }
+        }
+
+        private bool isThisLastTask(int gametype)
+        {
+            switch (gametype)
+            {
+                case 0: //ピクチャー
+                    if (ImgList.Count == 0)
+                        return true;
+                    else
+                        return false;
+                case 1: //ワード
+                    if (WordList.Count == 0)
+                        return true;
+                    else
+                        return false;
+                default: return false;
             }
         }
     }

@@ -35,6 +35,13 @@ namespace MixPictureApp
             this.DialogFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.BtnNextWord = new System.Windows.Forms.Button();
+            this.PanelGameType = new System.Windows.Forms.Panel();
+            this.radioBtn_Word = new System.Windows.Forms.RadioButton();
+            this.radioBtn_Picture = new System.Windows.Forms.RadioButton();
+            this.BtnPicture = new System.Windows.Forms.Button();
+            this.BtnLoad = new System.Windows.Forms.Button();
+            this.BtnWord = new System.Windows.Forms.Button();
             this.BtnSkip = new System.Windows.Forms.Button();
             this.BtnReset = new System.Windows.Forms.Button();
             this.BtnNextPicture = new System.Windows.Forms.Button();
@@ -50,17 +57,11 @@ namespace MixPictureApp
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPagePic = new System.Windows.Forms.TabPage();
-            this.BtnLoad = new System.Windows.Forms.Button();
             this.tabPageWord = new System.Windows.Forms.TabPage();
             this.TextBoxWord = new System.Windows.Forms.TextBox();
-            this.PanelGameType = new System.Windows.Forms.Panel();
-            this.radioBtn_Word = new System.Windows.Forms.RadioButton();
-            this.radioBtn_Picture = new System.Windows.Forms.RadioButton();
-            this.BtnPicture = new System.Windows.Forms.Button();
-            this.BtnWord = new System.Windows.Forms.Button();
-            this.BtnNextWord = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
+            this.PanelGameType.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox2)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -68,7 +69,6 @@ namespace MixPictureApp
             this.tabControl.SuspendLayout();
             this.tabPagePic.SuspendLayout();
             this.tabPageWord.SuspendLayout();
-            this.PanelGameType.SuspendLayout();
             this.SuspendLayout();
             // 
             // PictureBox1
@@ -129,6 +129,99 @@ namespace MixPictureApp
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(322, 227);
             this.panel2.TabIndex = 6;
+            // 
+            // BtnNextWord
+            // 
+            this.BtnNextWord.BackColor = System.Drawing.Color.Coral;
+            this.BtnNextWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnNextWord.Font = new System.Drawing.Font("MS UI Gothic", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnNextWord.Location = new System.Drawing.Point(134, 156);
+            this.BtnNextWord.Name = "BtnNextWord";
+            this.BtnNextWord.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+            this.BtnNextWord.Size = new System.Drawing.Size(182, 68);
+            this.BtnNextWord.TabIndex = 10;
+            this.BtnNextWord.Text = "せいかい";
+            this.BtnNextWord.UseVisualStyleBackColor = false;
+            this.BtnNextWord.Visible = false;
+            this.BtnNextWord.Click += new System.EventHandler(this.BtnNextWord_Click);
+            // 
+            // PanelGameType
+            // 
+            this.PanelGameType.BackColor = System.Drawing.Color.Goldenrod;
+            this.PanelGameType.Controls.Add(this.radioBtn_Word);
+            this.PanelGameType.Controls.Add(this.radioBtn_Picture);
+            this.PanelGameType.Location = new System.Drawing.Point(73, 21);
+            this.PanelGameType.Name = "PanelGameType";
+            this.PanelGameType.Size = new System.Drawing.Size(243, 31);
+            this.PanelGameType.TabIndex = 11;
+            // 
+            // radioBtn_Word
+            // 
+            this.radioBtn_Word.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioBtn_Word.AutoSize = true;
+            this.radioBtn_Word.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.radioBtn_Word.Location = new System.Drawing.Point(136, 6);
+            this.radioBtn_Word.Name = "radioBtn_Word";
+            this.radioBtn_Word.Size = new System.Drawing.Size(101, 20);
+            this.radioBtn_Word.TabIndex = 1;
+            this.radioBtn_Word.Text = "ワードゲーム";
+            this.radioBtn_Word.UseVisualStyleBackColor = true;
+            // 
+            // radioBtn_Picture
+            // 
+            this.radioBtn_Picture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioBtn_Picture.AutoSize = true;
+            this.radioBtn_Picture.Checked = true;
+            this.radioBtn_Picture.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.radioBtn_Picture.ForeColor = System.Drawing.Color.Black;
+            this.radioBtn_Picture.Location = new System.Drawing.Point(6, 6);
+            this.radioBtn_Picture.Name = "radioBtn_Picture";
+            this.radioBtn_Picture.Size = new System.Drawing.Size(124, 20);
+            this.radioBtn_Picture.TabIndex = 0;
+            this.radioBtn_Picture.TabStop = true;
+            this.radioBtn_Picture.Text = "ピクチャーゲーム";
+            this.radioBtn_Picture.UseVisualStyleBackColor = true;
+            // 
+            // BtnPicture
+            // 
+            this.BtnPicture.BackColor = System.Drawing.Color.Gold;
+            this.BtnPicture.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnPicture.ForeColor = System.Drawing.Color.Black;
+            this.BtnPicture.Location = new System.Drawing.Point(19, 165);
+            this.BtnPicture.Name = "BtnPicture";
+            this.BtnPicture.Size = new System.Drawing.Size(251, 55);
+            this.BtnPicture.TabIndex = 12;
+            this.BtnPicture.Text = "スタート！";
+            this.BtnPicture.UseVisualStyleBackColor = false;
+            this.BtnPicture.Visible = false;
+            this.BtnPicture.Click += new System.EventHandler(this.BtnPicture_Click);
+            // 
+            // BtnLoad
+            // 
+            this.BtnLoad.BackColor = System.Drawing.Color.Moccasin;
+            this.BtnLoad.Font = new System.Drawing.Font("ＭＳ ゴシック", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnLoad.ForeColor = System.Drawing.Color.Black;
+            this.BtnLoad.Location = new System.Drawing.Point(62, 156);
+            this.BtnLoad.Name = "BtnLoad";
+            this.BtnLoad.Size = new System.Drawing.Size(220, 62);
+            this.BtnLoad.TabIndex = 1;
+            this.BtnLoad.Text = "よーい！";
+            this.BtnLoad.UseVisualStyleBackColor = false;
+            this.BtnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
+            // 
+            // BtnWord
+            // 
+            this.BtnWord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.BtnWord.Font = new System.Drawing.Font("MS UI Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.BtnWord.ForeColor = System.Drawing.Color.Black;
+            this.BtnWord.Location = new System.Drawing.Point(39, 163);
+            this.BtnWord.Name = "BtnWord";
+            this.BtnWord.Size = new System.Drawing.Size(264, 55);
+            this.BtnWord.TabIndex = 13;
+            this.BtnWord.Text = "スタート";
+            this.BtnWord.UseVisualStyleBackColor = false;
+            this.BtnWord.Visible = false;
+            this.BtnWord.Click += new System.EventHandler(this.BtnWord_Click);
             // 
             // BtnSkip
             // 
@@ -312,119 +405,26 @@ namespace MixPictureApp
             this.tabPagePic.Text = "ピクチャー";
             this.tabPagePic.UseVisualStyleBackColor = true;
             // 
-            // BtnLoad
-            // 
-            this.BtnLoad.BackColor = System.Drawing.Color.Moccasin;
-            this.BtnLoad.Font = new System.Drawing.Font("ＭＳ ゴシック", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnLoad.ForeColor = System.Drawing.Color.Black;
-            this.BtnLoad.Location = new System.Drawing.Point(62, 156);
-            this.BtnLoad.Name = "BtnLoad";
-            this.BtnLoad.Size = new System.Drawing.Size(220, 62);
-            this.BtnLoad.TabIndex = 1;
-            this.BtnLoad.Text = "よーい！";
-            this.BtnLoad.UseVisualStyleBackColor = false;
-            this.BtnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
-            // 
             // tabPageWord
             // 
+            this.tabPageWord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.tabPageWord.Controls.Add(this.TextBoxWord);
             this.tabPageWord.Font = new System.Drawing.Font("ＭＳ ゴシック", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.tabPageWord.ForeColor = System.Drawing.Color.Black;
+            this.tabPageWord.ForeColor = System.Drawing.SystemColors.Info;
             this.tabPageWord.Location = new System.Drawing.Point(4, 39);
             this.tabPageWord.Name = "tabPageWord";
             this.tabPageWord.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageWord.Size = new System.Drawing.Size(478, 411);
             this.tabPageWord.TabIndex = 1;
             this.tabPageWord.Text = "ワード";
-            this.tabPageWord.UseVisualStyleBackColor = true;
             // 
             // TextBoxWord
             // 
-            this.TextBoxWord.Font = new System.Drawing.Font("ＭＳ ゴシック", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.TextBoxWord.Location = new System.Drawing.Point(97, 166);
+            this.TextBoxWord.Font = new System.Drawing.Font("ＭＳ ゴシック", 42F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.TextBoxWord.Location = new System.Drawing.Point(19, 174);
             this.TextBoxWord.Name = "TextBoxWord";
-            this.TextBoxWord.Size = new System.Drawing.Size(279, 71);
+            this.TextBoxWord.Size = new System.Drawing.Size(431, 63);
             this.TextBoxWord.TabIndex = 0;
-            // 
-            // PanelGameType
-            // 
-            this.PanelGameType.BackColor = System.Drawing.Color.Goldenrod;
-            this.PanelGameType.Controls.Add(this.radioBtn_Word);
-            this.PanelGameType.Controls.Add(this.radioBtn_Picture);
-            this.PanelGameType.Location = new System.Drawing.Point(73, 21);
-            this.PanelGameType.Name = "PanelGameType";
-            this.PanelGameType.Size = new System.Drawing.Size(243, 31);
-            this.PanelGameType.TabIndex = 11;
-            // 
-            // radioBtn_Word
-            // 
-            this.radioBtn_Word.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.radioBtn_Word.AutoSize = true;
-            this.radioBtn_Word.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.radioBtn_Word.Location = new System.Drawing.Point(136, 6);
-            this.radioBtn_Word.Name = "radioBtn_Word";
-            this.radioBtn_Word.Size = new System.Drawing.Size(101, 20);
-            this.radioBtn_Word.TabIndex = 1;
-            this.radioBtn_Word.Text = "ワードゲーム";
-            this.radioBtn_Word.UseVisualStyleBackColor = true;
-            // 
-            // radioBtn_Picture
-            // 
-            this.radioBtn_Picture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.radioBtn_Picture.AutoSize = true;
-            this.radioBtn_Picture.Checked = true;
-            this.radioBtn_Picture.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.radioBtn_Picture.ForeColor = System.Drawing.Color.Black;
-            this.radioBtn_Picture.Location = new System.Drawing.Point(6, 6);
-            this.radioBtn_Picture.Name = "radioBtn_Picture";
-            this.radioBtn_Picture.Size = new System.Drawing.Size(124, 20);
-            this.radioBtn_Picture.TabIndex = 0;
-            this.radioBtn_Picture.TabStop = true;
-            this.radioBtn_Picture.Text = "ピクチャーゲーム";
-            this.radioBtn_Picture.UseVisualStyleBackColor = true;
-            // 
-            // BtnPicture
-            // 
-            this.BtnPicture.BackColor = System.Drawing.Color.Gold;
-            this.BtnPicture.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnPicture.ForeColor = System.Drawing.Color.Black;
-            this.BtnPicture.Location = new System.Drawing.Point(19, 165);
-            this.BtnPicture.Name = "BtnPicture";
-            this.BtnPicture.Size = new System.Drawing.Size(251, 55);
-            this.BtnPicture.TabIndex = 12;
-            this.BtnPicture.Text = "スタート！";
-            this.BtnPicture.UseVisualStyleBackColor = false;
-            this.BtnPicture.Visible = false;
-            this.BtnPicture.Click += new System.EventHandler(this.BtnPicture_Click);
-            // 
-            // BtnWord
-            // 
-            this.BtnWord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.BtnWord.Font = new System.Drawing.Font("MS UI Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnWord.ForeColor = System.Drawing.Color.Black;
-            this.BtnWord.Location = new System.Drawing.Point(39, 163);
-            this.BtnWord.Name = "BtnWord";
-            this.BtnWord.Size = new System.Drawing.Size(264, 55);
-            this.BtnWord.TabIndex = 13;
-            this.BtnWord.Text = "スタート";
-            this.BtnWord.UseVisualStyleBackColor = false;
-            this.BtnWord.Visible = false;
-            this.BtnWord.Click += new System.EventHandler(this.BtnWord_Click);
-            // 
-            // BtnNextWord
-            // 
-            this.BtnNextWord.BackColor = System.Drawing.Color.Coral;
-            this.BtnNextWord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnNextWord.Font = new System.Drawing.Font("MS UI Gothic", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.BtnNextWord.Location = new System.Drawing.Point(134, 156);
-            this.BtnNextWord.Name = "BtnNextWord";
-            this.BtnNextWord.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.BtnNextWord.Size = new System.Drawing.Size(182, 68);
-            this.BtnNextWord.TabIndex = 10;
-            this.BtnNextWord.Text = "せいかい";
-            this.BtnNextWord.UseVisualStyleBackColor = false;
-            this.BtnNextWord.Visible = false;
-            this.BtnNextWord.Click += new System.EventHandler(this.BtnNextWord_Click);
             // 
             // RdmPicGame
             // 
@@ -444,6 +444,8 @@ namespace MixPictureApp
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.PanelGameType.ResumeLayout(false);
+            this.PanelGameType.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox2)).EndInit();
@@ -454,8 +456,6 @@ namespace MixPictureApp
             this.tabPagePic.ResumeLayout(false);
             this.tabPageWord.ResumeLayout(false);
             this.tabPageWord.PerformLayout();
-            this.PanelGameType.ResumeLayout(false);
-            this.PanelGameType.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
